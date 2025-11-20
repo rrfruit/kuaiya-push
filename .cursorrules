@@ -1,0 +1,90 @@
+# Project Context
+
+# 始终用中文回答
+
+You are working on a monorepo project named `push-ya` managed with **TurboRepo** and **PNPM**.
+The project structure is as follows:
+- `apps/server`: Backend API using **NestJS** v11.
+- `apps/web`: Frontend application using **React** 19, **Vite**, and **Tailwind CSS** v4.
+- `packages/db`: Database layer using **Prisma** with SQLite.
+- `packages/ui`: Shared UI component library based on **Shadcn/UI** and Tailwind CSS.
+- `packages/eslint-config`, `packages/typescript-config`: Shared configuration packages.
+
+# Tech Stack & Conventions
+
+## General
+- **Package Manager**: PNPM (`pnpm-workspace.yaml`).
+- **Monorepo Tool**: TurboRepo (`turbo.json`).
+- **Language**: TypeScript (Strict mode enabled).
+- **Linting/Formatting**: ESLint (Flat Config) and Prettier.
+
+## Frontend (`apps/web`)
+- **Framework**: React 19.
+- **Build Tool**: Vite.
+- **Styling**: Tailwind CSS v4 (using `@tailwindcss/vite`).
+- **UI Components**: Import from `@repo/ui`.
+  - Example: `import { Button } from '@repo/ui/components/ui/button'`.
+- **State Management**: React Hooks (standard).
+- **Routing**: (Check if added later, currently simple App).
+
+## Backend (`apps/server`)
+- **Framework**: NestJS v11.
+- **Architecture**: Modular (Feature-based modules in `src/modules/`).
+- **Database Access**: Use `PrismaService` (or equivalent) from `@repo/db`.
+- **Real-time**: Socket.IO (`SocketGateway`).
+- **Logging**: `winston` logger integration.
+- **Automation**: `puppeteer` with `puppeteer-extra` and stealth plugin.
+  - **Browser Manager**: `BrowserManagerService` manages per-account persistent sessions.
+  - **Anti-Detection**: Uses `stealth` plugin and custom page property overrides.
+  - **Session Life-cycle**: Auto-closes inactive sessions via Cron; cleans up on shutdown.
+
+## Database (`packages/db`)
+- **ORM**: Prisma.
+- **Database**: SQLite (`dev.db` or similar).
+- **Schema**: Located at `packages/db/prisma/schema.prisma`.
+- **Generators**: `prisma-client-js` outputting to `../generated/client`.
+
+## Shared UI (`packages/ui`)
+- **Structure**: `src/components/ui` for Shadcn components.
+- **Utils**: `src/lib/utils.ts` contains `cn` helper for class merging.
+- **Exports**: Configured in `package.json` exports.
+
+# Development Workflow
+
+## Terminal Commands
+- **Run Dev**: `pnpm dev` (runs all apps via Turbo).
+- **Build**: `pnpm build`.
+- **Lint**: `pnpm lint`.
+- **Database Studio**: `pnpm --filter @repo/db studio`.
+- **Add Dependency**: `pnpm add <package> --filter <workspace-name>`.
+  - Example: `pnpm add axios --filter @repo/web`.
+
+## Database Updates
+1. Modify `packages/db/prisma/schema.prisma`.
+2. Run migration/push: `pnpm db:push` or `pnpm db:migrate:dev`.
+3. Generate client (usually auto-triggered, but can be forced): `pnpm generate`.
+
+# Coding Guidelines
+
+- **TypeScript**:
+  - Use `interface` for object definitions.
+  - Avoid `any`, use `unknown` or specific types.
+  - Ensure strict null checks are respected.
+- **React**:
+  - Use functional components.
+  - Use the `cn()` utility for conditional classes.
+  - Keep components small and composed.
+- **NestJS**:
+  - Follow Dependency Injection patterns.
+  - Use DTOs for request validation (ensure `class-validator` is used if applicable).
+  - Place business logic in Services, not Controllers.
+  - Use `Logger` for all significant events, especially in automation flows.
+- **File Naming**:
+  - React: `PascalCase.tsx` for components.
+  - NestJS: `kebab-case.ts` (e.g., `user.service.ts`).
+
+# Important Paths
+- **Prisma Schema**: `packages/db/prisma/schema.prisma`
+- **Web App Entry**: `apps/web/src/main.tsx`
+- **Server Entry**: `apps/server/src/main.ts`
+- **Browser Automation**: `apps/server/src/modules/browser/browser-manager.service.ts`

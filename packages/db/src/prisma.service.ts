@@ -11,7 +11,6 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
     const datasourceUrl = path.join(__dirname, '../prisma', 'data.db')
     super({
       log: ['error'],
-      datasourceUrl: `file:${datasourceUrl}`,
     })
     this.logger.log('DATABASE_URL: ' + datasourceUrl)
   }
