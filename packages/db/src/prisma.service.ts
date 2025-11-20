@@ -8,9 +8,11 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
   private readonly logger = new Logger(PrismaService.name)
 
   constructor() {
-    const datasourceUrl = path.join(__dirname, '../prisma', 'data.db')
+    const datasourceUrl = path.join(__dirname, '..', 'data.db')
+    console.log('datasourceUrl: ', datasourceUrl)
     super({
       log: ['error'],
+      datasourceUrl: `file:${datasourceUrl}`,
     })
     this.logger.log('DATABASE_URL: ' + datasourceUrl)
   }
