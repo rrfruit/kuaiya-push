@@ -14,7 +14,6 @@ import {
 } from '@repo/ui/components/ui/breadcrumb'
 import { useSidebar } from '@repo/ui/components/ui/sidebar'
 import ModeToggle from './mode-toggle'
-import VipPointsInfo from './vip-points-info'
 
 interface ContentLayoutProps {
   title: string
@@ -26,7 +25,6 @@ interface ContentLayoutProps {
   actions?: React.ReactNode
   className?: string
   headerClassName?: string
-  showVipPointsInfo?: boolean
   style?: React.CSSProperties
 }
 
@@ -80,7 +78,6 @@ export default function ContentLayout({
   style,
   headerClassName,
   breadcrumbs,
-  showVipPointsInfo = true,
 }: ContentLayoutProps) {
   const isMobile = useIsMobile()
 
@@ -88,7 +85,7 @@ export default function ContentLayout({
     <>
       <header
         className={cn(
-          'bg-background/95 sticky top-0 z-10 flex h-14 shrink-0 items-center gap-2 border-b-1 pr-4 backdrop-blur-sm transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12',
+          'bg-background/95 sticky top-0 z-10 flex h-14 shrink-0 items-center gap-2 border-b pr-4 backdrop-blur-sm transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12',
           headerClassName,
         )}
       >
@@ -98,7 +95,6 @@ export default function ContentLayout({
           {breadcrumbs ? <Breadcrumbs breadcrumbs={breadcrumbs} /> : <div className="text-lg font-medium">{title}</div>}
         </div>
         <div className="flex items-center gap-2">
-          {showVipPointsInfo && <VipPointsInfo />}
           <ModeToggle />
         </div>
         {actions && <div className="flex items-center gap-2">{actions}</div>}
