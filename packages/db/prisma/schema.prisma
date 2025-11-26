@@ -51,11 +51,16 @@ enum ProxyStatus {
   EXPIRED
 }
 
+enum WorkType {
+  TEXT
+  IMAGE
+  VIDEO
+}
+
 model User {
   id        String   @id @default(cuid())
   username  String   @unique
   password  String
-  nickname  String?
   role      String?  @default("user")
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
@@ -89,7 +94,6 @@ model Account {
   displayName    String
   coverUrl       String?
   platformUserId String?
-  credential     Json?
   status         AccountStatus @default(NOT_LOGGED_IN)
   lastSyncedAt   DateTime?
   createdAt      DateTime      @default(now())
@@ -107,10 +111,12 @@ model Work {
   id          String     @id @default(cuid())
   userId      String
   title       String
-  description String?
+  type        WorkType @default(TEXT)
+  description String
   mediaUrl    String
   coverUrl    String?
-  metadata    Json?
+  content     String?
+  imgs        String?
   status      WorkStatus @default(DRAFT)
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
