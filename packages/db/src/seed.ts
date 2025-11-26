@@ -1,6 +1,5 @@
-import { prisma } from './client'
-
 import type { User } from '../generated/client'
+import { prisma } from './client'
 
 const DEFAULT_USERS = [
   // Add your own user to pre-populate the database with

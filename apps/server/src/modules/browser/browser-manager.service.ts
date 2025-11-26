@@ -1,11 +1,10 @@
-import { Injectable, Logger, OnApplicationShutdown } from '@nestjs/common'
-import { Cron, CronExpression } from '@nestjs/schedule'
-import { Browser, Page } from 'puppeteer'
 import * as path from 'path'
-import lock from '../../common/utils/lock'
-
+import { Browser, Page } from 'puppeteer'
 import puppeteer from 'puppeteer-extra'
 import StealthPlugin from 'puppeteer-extra-plugin-stealth'
+import { Injectable, Logger, OnApplicationShutdown } from '@nestjs/common'
+import { Cron, CronExpression } from '@nestjs/schedule'
+import lock from '../../common/utils/lock'
 
 puppeteer.use(StealthPlugin())
 

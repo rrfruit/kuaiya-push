@@ -1,4 +1,3 @@
-import * as React from 'react'
 import {
   ClipboardListIcon,
   DatabaseIcon,
@@ -13,8 +12,8 @@ import {
   ServerCogIcon,
   LayoutDashboardIcon,
 } from 'lucide-react'
+import * as React from 'react'
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from '@repo/ui/components/ui/sidebar'
-
 import { NavHeader } from './nav-header'
 import { NavMain } from './nav-main'
 

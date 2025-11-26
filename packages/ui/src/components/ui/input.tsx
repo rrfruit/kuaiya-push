@@ -1,5 +1,4 @@
 import * as React from 'react'
-
 import { cn } from '@repo/ui/lib/utils'
 
 function Input({ className, type, ...props }: React.ComponentProps<'input'>) {

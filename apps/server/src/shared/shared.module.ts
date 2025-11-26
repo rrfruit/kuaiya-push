@@ -1,6 +1,5 @@
 import type { Provider } from '@nestjs/common'
 import { Global, Module } from '@nestjs/common'
-
 import { PrismaService } from '@repo/db'
 
 const providers: Provider[] = [PrismaService]

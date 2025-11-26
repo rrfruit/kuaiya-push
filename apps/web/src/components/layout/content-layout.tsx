@@ -1,9 +1,6 @@
 import { AlignLeft } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { Fragment } from 'react/jsx-runtime'
-import { Button } from '@repo/ui/components/ui/button'
-import { useIsMobile } from '@/hooks/use-mobile'
-import { cn } from '@repo/ui/lib/utils'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -12,7 +9,10 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@repo/ui/components/ui/breadcrumb'
+import { Button } from '@repo/ui/components/ui/button'
 import { useSidebar } from '@repo/ui/components/ui/sidebar'
+import { cn } from '@repo/ui/lib/utils'
+import { useIsMobile } from '@/hooks/use-mobile'
 import ModeToggle from './mode-toggle'
 
 interface ContentLayoutProps {

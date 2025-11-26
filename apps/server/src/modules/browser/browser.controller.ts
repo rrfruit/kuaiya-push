@@ -1,7 +1,7 @@
-import { Controller, Get, Param, Post, Query, Res, Body } from '@nestjs/common'
-import { BrowserManagerService } from './browser-manager.service'
 import type { Response } from 'express'
+import { Controller, Get, Param, Post, Query, Res, Body } from '@nestjs/common'
 import { NoLogging } from '../../common/decorators/no-logging.decorator'
+import { BrowserManagerService } from './browser-manager.service'
 
 @Controller('browser')
 export class BrowserController {
