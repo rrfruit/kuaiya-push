@@ -11,6 +11,7 @@ import {
   User,
   ServerIcon,
   ServerCogIcon,
+  LayoutDashboardIcon,
 } from 'lucide-react'
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from '@repo/ui/components/ui/sidebar'
 
@@ -24,6 +25,11 @@ const data = {
     email: 'm@example.com',
   },
   navMain: [
+    {
+      title: '数据概览',
+      url: '/dashboard',
+      icon: LayoutDashboardIcon,
+    },
     {
       title: '作品管理',
       url: '/works',
