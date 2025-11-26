@@ -57,21 +57,6 @@ enum WorkType {
   VIDEO
 }
 
-model User {
-  id        String   @id @default(cuid())
-  username  String   @unique
-  password  String
-  role      String?  @default("user")
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  accounts       Account[]
-  works          Work[]
-  proxies        Proxy[]
-  publishRecords WorkPublishRecord[]
-}
-
 model Platform {
   id          String         @id @default(cuid())
   name        String
@@ -88,7 +73,6 @@ model Platform {
 
 model Account {
   id             String        @id @default(cuid())
-  userId         String
   platformId     String
   proxyId        String?
   displayName    String
@@ -99,7 +83,6 @@ model Account {
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
 
-  user     User                @relation(fields: [userId], references: [id], onDelete: Cascade)
   platform Platform            @relation(fields: [platformId], references: [id], onDelete: Cascade)
   proxy    Proxy?              @relation(fields: [proxyId], references: [id], onDelete: SetNull)
   records  WorkPublishRecord[]
@@ -109,7 +92,6 @@ model Account {
 
 model Work {
   id          String     @id @default(cuid())
-  userId      String
   title       String
   type        WorkType @default(TEXT)
   description String
@@ -121,13 +103,11 @@ model Work {
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 
-  user    User                @relation(fields: [userId], references: [id], onDelete: Cascade)
   records WorkPublishRecord[]
 }
 
 model WorkPublishRecord {
   id           String        @id @default(cuid())
-  userId       String
   workId       String
   accountId    String
   platformId   String
@@ -141,7 +121,6 @@ model WorkPublishRecord {
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
 
-  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   work     Work     @relation(fields: [workId], references: [id], onDelete: Cascade)
   account  Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
   platform Platform @relation(fields: [platformId], references: [id], onDelete: Cascade)
@@ -153,7 +132,6 @@ model WorkPublishRecord {
 
 model Proxy {
   id         String      @id @default(cuid())
-  userId     String
   name       String?
   type       ProxyType   @default(HTTP)
   host       String
@@ -168,6 +146,5 @@ model Proxy {
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
 
-  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   accounts Account[]
 }
