@@ -26,14 +26,14 @@ export function NavMain({
         <SidebarMenu>
           <SidebarMenuItem className="flex items-center gap-2">
             <SidebarMenuButton
-              tooltip="开始创作"
+              tooltip="新建作品"
               className="bg-primary hover:bg-primary/90 active:bg-primary/90 min-w-8 cursor-pointer text-white! duration-200 ease-linear hover:text-white"
               onClick={() => {
-                navigate('/creation')
+                navigate('/works/create')
               }}
             >
               <CirclePlus className="ml-0.5" />
-              <span>开始创作</span>
+              <span>新建作品</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

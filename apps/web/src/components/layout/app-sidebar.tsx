@@ -1,16 +1,16 @@
 import * as React from 'react'
 import {
-  CameraIcon,
   ClipboardListIcon,
   DatabaseIcon,
-  FileCodeIcon,
   FileIcon,
   FileTextIcon,
   FileVideo2,
-  FolderKanban,
   MessageSquareShare,
   MailCheck,
-  SquareActivity,
+  SettingsIcon,
+  User,
+  ServerIcon,
+  ServerCogIcon,
 } from 'lucide-react'
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from '@repo/ui/components/ui/sidebar'
 
@@ -25,77 +25,34 @@ const data = {
   },
   navMain: [
     {
-      title: '我的项目',
-      url: '/projects',
-      icon: FolderKanban,
-    },
-    {
-      title: '音频创作',
-      url: '/tts',
-      icon: SquareActivity,
-    },
-    {
-      title: '资源管理',
-      url: '/assets',
+      title: '作品管理',
+      url: '/works',
       icon: FileVideo2,
     },
-    // {
-    //   title: '图片生成',
-    //   url: '/text-to-img',
-    //   icon: Images
-    // },
     {
-      title: '任务管理',
-      url: '/job',
-      icon: ClipboardListIcon,
-    },
-  ],
-  navClouds: [
-    {
-      title: 'Capture',
-      icon: CameraIcon,
-      isActive: true,
-      url: '#',
-      items: [
-        {
-          title: 'Active Proposals',
-          url: '#',
-        },
-        {
-          title: 'Archived',
-          url: '#',
-        },
-      ],
-    },
-    {
-      title: 'Proposal',
+      title: '发布记录',
+      url: '/publish-records',
       icon: FileTextIcon,
-      url: '#',
-      items: [
-        {
-          title: 'Active Proposals',
-          url: '#',
-        },
-        {
-          title: 'Archived',
-          url: '#',
-        },
-      ],
     },
     {
-      title: 'Prompts',
-      icon: FileCodeIcon,
-      url: '#',
-      items: [
-        {
-          title: 'Active Proposals',
-          url: '#',
-        },
-        {
-          title: 'Archived',
-          url: '#',
-        },
-      ],
+      title: '账号管理',
+      url: '/accounts',
+      icon: User,
+    },
+    {
+      title: '代理管理',
+      url: '/proxies',
+      icon: ServerIcon,
+    },
+    {
+      title: '平台管理',
+      url: '/platforms',
+      icon: ServerCogIcon,
+    },
+    {
+      title: '系统设置',
+      url: '/settings',
+      icon: SettingsIcon,
     },
   ],
   navSecondary: [
