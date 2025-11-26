@@ -48,6 +48,7 @@ The project structure is as follows:
 - **Structure**: `src/components/ui` for Shadcn components.
 - **Utils**: `src/lib/utils.ts` contains `cn` helper for class merging.
 - **Exports**: Configured in `package.json` exports.
+- **安装**: pnpm ui add components
 
 # Development Workflow
 
