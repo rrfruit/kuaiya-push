@@ -2,7 +2,8 @@
   "name": "@repo/db",
   "version": "1.0.0",
   "exports": {
-    ".": "./dist/index.js"
+    ".": "./dist/index.js",
+    "./types": "./generated/client/index.d.ts"
   },
   "scripts": {
     "db:migrate:deploy": "prisma migrate deploy",

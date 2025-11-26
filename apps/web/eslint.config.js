@@ -1,4 +1,17 @@
-import { config } from "@repo/eslint-config/react";
+import { config } from '@repo/eslint-config/react'
 
 /** @type {import("eslint").Linter.Config} */
-export default config;
+export default [
+  ...config,
+  {
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off'
+    },
+  },
+]
