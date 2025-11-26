@@ -4,17 +4,16 @@ import { toast } from 'sonner'
 import { useUserStore } from '@/stores/useUserStore'
 import { ApiResponse } from '@/types'
 
-
 const instance = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_URL,
   timeout: 600_000,
   headers: {
-    'Content-Type': 'application/json'
-  }
+    'Content-Type': 'application/json',
+  },
 })
 
 instance.interceptors.request.use(
-  async (config) => {
+  async config => {
     try {
       config.headers.authorization = 'Bearer ' + useUserStore.getState().token || ''
       return config
@@ -24,13 +23,13 @@ instance.interceptors.request.use(
   },
   (error: AxiosError) => {
     return Promise.reject(error)
-  }
+  },
 )
 
 const publicUrls = ['/auth/profile']
 
 instance.interceptors.response.use(
-  async (response) => {
+  async response => {
     try {
       if (response.data?.code !== 0) {
         if (response.data.code === 4100) {
@@ -49,13 +48,13 @@ instance.interceptors.response.use(
   },
   (error: AxiosError) => {
     return Promise.reject(error)
-  }
+  },
 )
 
 const request = async <T = any>(url: string, config?: AxiosRequestConfig): Promise<ApiResponse<T>> => {
   return new Promise((resolve, reject) => {
     instance(url, config)
-      .then((res) => resolve(res.data as ApiResponse<T>))
+      .then(res => resolve(res.data as ApiResponse<T>))
       .catch(reject)
   })
 }

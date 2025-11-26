@@ -1,4 +1,4 @@
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, Link } from 'react-router-dom'
 
 export function MainLayout() {
   return (
@@ -7,15 +7,10 @@ export function MainLayout() {
         <div className="container flex h-14 items-center">
           <div className="mr-4 hidden md:flex">
             <Link to="/" className="mr-6 flex items-center space-x-2">
-              <span className="hidden font-bold sm:inline-block">
-                Push Ya
-              </span>
+              <span className="hidden font-bold sm:inline-block">Push Ya</span>
             </Link>
             <nav className="flex items-center space-x-6 text-sm font-medium">
-              <Link
-                to="/"
-                className="transition-colors hover:text-foreground/80 text-foreground/60"
-              >
+              <Link to="/" className="transition-colors hover:text-foreground/80 text-foreground/60">
                 Dashboard
               </Link>
             </nav>
@@ -28,6 +23,5 @@ export function MainLayout() {
         </div>
       </main>
     </div>
-  );
+  )
 }
-

@@ -1,12 +1,12 @@
-import { createBrowserRouter } from "react-router-dom";
-import { MainLayout } from "@/components/layouts/main-layout";
-import ErrorPage from "@/pages/error/page";
-import DashboardPage from "@/pages/dashboard/page";
+import { createBrowserRouter } from 'react-router-dom'
+import  Layout from '@/components/layout/index'
+import ErrorPage from '@/pages/error/page'
+import DashboardPage from '@/pages/dashboard/page'
 
 export const router = createBrowserRouter([
   {
-    path: "/",
-    element: <MainLayout />,
+    path: '/',
+    element: <Layout />,
     errorElement: <ErrorPage />,
     children: [
       {
@@ -15,5 +15,4 @@ export const router = createBrowserRouter([
       },
     ],
   },
-]);
-
+])

@@ -10,15 +10,14 @@ interface AppState {
 
 export const useAppStore = create<AppState>()(
   persist(
-    (set) => ({
+    set => ({
       theme: 'light',
       sidebarOpen: true,
-      setTheme: (theme) => set({ theme }),
-      toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen })),
+      setTheme: theme => set({ theme }),
+      toggleSidebar: () => set(state => ({ sidebarOpen: !state.sidebarOpen })),
     }),
     {
       name: 'app-storage',
     },
   ),
 )
-

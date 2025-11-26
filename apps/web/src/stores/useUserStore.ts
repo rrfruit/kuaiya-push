@@ -3,7 +3,7 @@ import { profile } from '@/api/auth'
 import { User } from '@/types'
 
 export const useUserStore = create<Partial<User & { token: string }>>(() => ({
-  token: localStorage.getItem('token') || ''
+  token: localStorage.getItem('token') || '',
 }))
 
 export const setToken = (token: string) => {
@@ -18,7 +18,7 @@ export const clearToken = () => {
 
 export const setUserInfo = (info: Partial<User>) => {
   useUserStore.setState(() => ({
-    ...info
+    ...info,
   }))
 }
 
