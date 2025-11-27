@@ -3,7 +3,7 @@ import { WinstonModule } from 'nest-winston'
 import { createLogger } from 'winston'
 import { AppModule } from './app.module'
 import { winstonConfig } from './winston/winston.config'
-import { ClassSerializerInterceptor } from '@nestjs/common'
+import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common'
 import { TransformInterceptor } from './common/interceptors/transform.interceptor'
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor'
 
@@ -17,6 +17,13 @@ async function bootstrap() {
 
   app.enableShutdownHooks()
   app.setGlobalPrefix('api')
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      transform: true,
+      forbidNonWhitelisted: true,
+    }),
+  )
   app.useGlobalInterceptors(
     new LoggingInterceptor(app.get(Reflector)),
     new TransformInterceptor(app.get(Reflector)),
