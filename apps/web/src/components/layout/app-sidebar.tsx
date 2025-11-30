@@ -11,11 +11,14 @@ import {
   ServerIcon,
   ServerCogIcon,
   LayoutDashboardIcon,
+  CirclePlus,
 } from 'lucide-react'
 import * as React from 'react'
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from '@repo/ui/components/ui/sidebar'
+import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenuButton, SidebarMenu, SidebarMenuItem, SidebarRail, SidebarGroupContent, SidebarGroup } from '@repo/ui/components/ui/sidebar'
 import { NavHeader } from './nav-header'
 import { NavMain } from './nav-main'
+import { sidebarData } from './sidebar-data'
+import { NavGroup } from './nav-group'
 
 // This is sample data.
 const data = {
@@ -91,6 +94,27 @@ const data = {
   ],
 }
 
+function NewWorkButton() {
+  return <SidebarGroup>
+    <SidebarGroupContent className="flex flex-col gap-2">
+      <SidebarMenu>
+        <SidebarMenuItem className="flex items-center gap-2">
+          <SidebarMenuButton
+            tooltip="新建作品"
+            className="bg-primary hover:bg-primary/90 active:bg-primary/90 min-w-8 cursor-pointer text-white! duration-200 ease-linear hover:text-white"
+            onClick={() => {
+              // navigate('/works/create')
+            }}
+          >
+            <CirclePlus />
+            <span>新建作品</span>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      </SidebarMenu>
+    </SidebarGroupContent>
+  </SidebarGroup>
+}
+
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -98,8 +122,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavHeader />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <div className="flex-1"></div>
+
+        <NewWorkButton />
+
+        {sidebarData.navGroups.map((props) => (
+          <NavGroup key={props.title} {...props} />
+        ))}
       </SidebarContent>
       <SidebarFooter>
         <div className="pb-[env(safe-area-inset-bottom)]"></div>
