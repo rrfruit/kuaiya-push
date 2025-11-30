@@ -1,5 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom'
-import Layout from '@/components/layout/index'
+import Layout from '@/components/layout/index2'
 import DashboardPage from '@/pages/dashboard/page'
 import ErrorPage from '@/pages/error/page'
 
