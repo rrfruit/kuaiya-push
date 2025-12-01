@@ -6,9 +6,6 @@ import { AppModule } from './app.module'
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor'
 import { TransformInterceptor } from './common/interceptors/transform.interceptor'
 import { winstonConfig } from './winston/winston.config'
-import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common'
-import { TransformInterceptor } from './common/interceptors/transform.interceptor'
-import { LoggingInterceptor } from './common/interceptors/logging.interceptor'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
