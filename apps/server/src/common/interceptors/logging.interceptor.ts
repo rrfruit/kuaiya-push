@@ -2,8 +2,8 @@ import { Observable } from 'rxjs'
 import { tap } from 'rxjs/operators'
 import { CallHandler, ExecutionContext, Injectable, Logger, NestInterceptor } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
-import { getIpAddress } from '../utils/getIpAddress'
 import { NO_LOGGING_KEY } from '../decorators/no-logging.decorator'
+import { getIpAddress } from '../utils/getIpAddress'
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {

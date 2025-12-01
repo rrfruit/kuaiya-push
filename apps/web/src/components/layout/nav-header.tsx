@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
-import Logo from '@/components/logo'
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarTrigger } from '@repo/ui/components/ui/sidebar'
+import Logo from '@/components/logo'
 
 export function NavHeader() {
   const navigate = useNavigate()
