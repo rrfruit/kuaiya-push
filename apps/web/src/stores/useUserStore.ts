@@ -1,6 +1,11 @@
 import { create } from 'zustand'
 import { profile } from '@/api/auth'
-import { User } from '@/types'
+
+type User = {
+  name: string
+  email: string
+  avatar: string
+}
 
 export const useUserStore = create<Partial<User & { token: string }>>(() => ({
   token: localStorage.getItem('token') || '',
