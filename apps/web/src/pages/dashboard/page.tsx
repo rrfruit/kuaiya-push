@@ -5,7 +5,7 @@ export default function DashboardPage() {
   const { sidebarOpen, toggleSidebar, theme, setTheme } = useAppStore()
 
   return (
-    <div className="space-y-4">
+    <div className="p-4">
       <div className="flex justify-between items-center">
         <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
         <div className="space-x-2">
