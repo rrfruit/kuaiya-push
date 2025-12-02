@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   MoreVerticalIcon,
@@ -6,7 +6,7 @@ import {
   ShareIcon,
   TrashIcon,
   LucideIcon,
-} from "lucide-react"
+} from "lucide-react";
 
 import {
   DropdownMenu,
@@ -14,7 +14,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@repo/ui/components/ui/dropdown-menu"
+} from "@repo/ui/components/ui/dropdown-menu";
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -23,18 +23,18 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@repo/ui/components/ui/sidebar"
+} from "@repo/ui/components/ui/sidebar";
 
 export function NavDocuments({
   items,
 }: {
   items: {
-    name: string
-    url: string
-    icon: LucideIcon
-  }[]
+    name: string;
+    url: string;
+    icon: LucideIcon;
+  }[];
 }) {
-  const { isMobile } = useSidebar()
+  const { isMobile } = useSidebar();
 
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
@@ -88,5 +88,5 @@ export function NavDocuments({
         </SidebarMenuItem>
       </SidebarMenu>
     </SidebarGroup>
-  )
+  );
 }

@@ -1,7 +1,6 @@
-import { AppSidebar } from "@repo/ui/components/app-sidebar";
-import { SiteHeader } from "@repo/ui/components/site-header";
+import { AppSidebar } from "./app-sidebar";
+import { SiteHeader } from "./site-header";
 import { SidebarInset, SidebarProvider } from "@repo/ui/components/ui/sidebar";
-
 import { Outlet } from "react-router-dom";
 
 export default function MainLayout() {

@@ -1,6 +1,6 @@
-import { TrendingDownIcon, TrendingUpIcon } from "lucide-react"
+import { TrendingDownIcon, TrendingUpIcon } from "lucide-react";
 
-import { Badge } from "@repo/ui/components/ui/badge"
+import { Badge } from "@repo/ui/components/ui/badge";
 import {
   Card,
   CardAction,
@@ -8,7 +8,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@repo/ui/components/ui/card"
+} from "@repo/ui/components/ui/card";
 
 export function SectionCards() {
   return (
@@ -98,5 +98,5 @@ export function SectionCards() {
         </CardFooter>
       </Card>
     </div>
-  )
+  );
 }

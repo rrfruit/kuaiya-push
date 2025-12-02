@@ -1,24 +1,24 @@
-"use client"
+"use client";
 
-import { CirclePlusIcon, MailIcon, LucideIcon } from "lucide-react"
+import { CirclePlusIcon, LucideIcon } from "lucide-react";
 
-import { Button } from "@repo/ui/components/ui/button"
 import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@repo/ui/components/ui/sidebar"
+} from "@repo/ui/components/ui/sidebar";
+import { NavGroup } from "./nav-group";
 
 export function NavMain({
   items,
 }: {
   items: {
-    title: string
-    url: string
-    icon?: LucideIcon
-  }[]
+    title: string;
+    url: string;
+    icon?: LucideIcon;
+  }[];
 }) {
   return (
     <SidebarGroup>
@@ -34,17 +34,8 @@ export function NavMain({
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
-        <SidebarMenu>
-          {items.map((item) => (
-            <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton tooltip={item.title}>
-                {item.icon && <item.icon />}
-                <span>{item.title}</span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
-        </SidebarMenu>
+        <NavGroup title="" items={items} />
       </SidebarGroupContent>
     </SidebarGroup>
-  )
+  );
 }
