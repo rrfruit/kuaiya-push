@@ -1,28 +1,34 @@
-import { IsString, IsOptional, IsEnum, IsNotEmpty, MaxLength } from 'class-validator'
-import { PlatformStatus } from '@repo/db'
+import {
+  IsString,
+  IsOptional,
+  IsEnum,
+  IsNotEmpty,
+  MaxLength,
+} from "class-validator";
+import { PlatformStatus } from "@repo/db";
 
 export class CreatePlatformDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(100)
-  name: string
+  name: string;
 
   @IsString()
   @IsNotEmpty()
   @MaxLength(50)
-  code: string
+  code: string;
 
   @IsString()
   @IsOptional()
   @MaxLength(500)
-  description?: string
+  description?: string;
 
   @IsString()
   @IsOptional()
   @MaxLength(255)
-  apiBaseUrl?: string
+  apiBaseUrl?: string;
 
   @IsEnum(PlatformStatus)
   @IsOptional()
-  status?: PlatformStatus
+  status?: PlatformStatus;
 }

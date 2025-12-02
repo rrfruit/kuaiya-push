@@ -1,6 +1,10 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common'
-import { PrismaService } from '@repo/db'
-import { CreateAccountDto, UpdateAccountDto } from './dto'
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from "@nestjs/common";
+import { PrismaService } from "@repo/db";
+import { CreateAccountDto, UpdateAccountDto } from "./dto";
 
 @Injectable()
 export class AccountService {
@@ -13,7 +17,7 @@ export class AccountService {
         platform: true,
         proxy: true,
       },
-    })
+    });
   }
 
   async findAll() {
@@ -22,8 +26,8 @@ export class AccountService {
         platform: true,
         proxy: true,
       },
-      orderBy: { createdAt: 'desc' },
-    })
+      orderBy: { createdAt: "desc" },
+    });
   }
 
   async findByPlatform(platformId: string) {
@@ -33,8 +37,8 @@ export class AccountService {
         platform: true,
         proxy: true,
       },
-      orderBy: { createdAt: 'desc' },
-    })
+      orderBy: { createdAt: "desc" },
+    });
   }
 
   async findOne(id: string) {
@@ -44,16 +48,16 @@ export class AccountService {
         platform: true,
         proxy: true,
       },
-    })
+    });
     if (!account) {
-      throw new NotFoundException(`Account with id "${id}" not found`)
+      throw new NotFoundException(`Account with id "${id}" not found`);
     }
-    return account
+    return account;
   }
 
   async update(id: string, updateAccountDto: UpdateAccountDto) {
     // 确保账号存在
-    await this.findOne(id)
+    await this.findOne(id);
 
     return this.prisma.account.update({
       where: { id },
@@ -62,20 +66,20 @@ export class AccountService {
         platform: true,
         proxy: true,
       },
-    })
+    });
   }
 
   async remove(id: string) {
     // 确保账号存在
-    await this.findOne(id)
+    await this.findOne(id);
 
     return this.prisma.account.delete({
       where: { id },
-    })
+    });
   }
 
-  async updateStatus(id: string, status: CreateAccountDto['status']) {
-    await this.findOne(id)
+  async updateStatus(id: string, status: CreateAccountDto["status"]) {
+    await this.findOne(id);
 
     return this.prisma.account.update({
       where: { id },
@@ -87,6 +91,6 @@ export class AccountService {
         platform: true,
         proxy: true,
       },
-    })
+    });
   }
 }

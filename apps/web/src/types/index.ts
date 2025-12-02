@@ -1,7 +1,7 @@
-export * from '@repo/db/types'
+export * from "@repo/db/types";
 
 export type ApiResponse<T> = {
-  code: number
-  message: string
-  data: T
-}
+  code: number;
+  message: string;
+  data: T;
+};

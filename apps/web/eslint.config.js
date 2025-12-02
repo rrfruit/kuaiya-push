@@ -1,4 +1,4 @@
-import { config } from '@repo/eslint-config/react'
+import { config } from "@repo/eslint-config/react";
 
 /** @type {import("eslint").Linter.Config} */
 export default [
@@ -11,8 +11,8 @@ export default [
       },
     },
     rules: {
-      '@typescript-eslint/no-explicit-any': 'off',
-      'react-refresh/only-export-components': 'off',
+      "@typescript-eslint/no-explicit-any": "off",
+      "react-refresh/only-export-components": "off",
     },
   },
-]
+];

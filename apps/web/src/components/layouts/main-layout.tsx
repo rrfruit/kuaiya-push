@@ -1,11 +1,8 @@
-import { AppSidebar } from "@repo/ui/components/app-sidebar"
-import { SiteHeader } from "@repo/ui/components/site-header"
-import {
-  SidebarInset,
-  SidebarProvider,
-} from "@repo/ui/components/ui/sidebar"
+import { AppSidebar } from "@repo/ui/components/app-sidebar";
+import { SiteHeader } from "@repo/ui/components/site-header";
+import { SidebarInset, SidebarProvider } from "@repo/ui/components/ui/sidebar";
 
-import { Outlet } from "react-router-dom"
+import { Outlet } from "react-router-dom";
 
 export default function MainLayout() {
   return (
@@ -27,5 +24,5 @@ export default function MainLayout() {
         </div>
       </SidebarInset>
     </SidebarProvider>
-  )
+  );
 }

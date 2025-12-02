@@ -1,5 +1,5 @@
-import globals from 'globals'
-import { config as baseConfig } from './base.js'
+import globals from "globals";
+import { config as baseConfig } from "./base.js";
 
 /**
  * A custom ESLint configuration for Nest.js.
@@ -14,7 +14,7 @@ export const nestJsConfig = [
         ...globals.node,
         ...globals.jest,
       },
-      sourceType: 'commonjs',
+      sourceType: "commonjs",
       parserOptions: {
         projectService: true,
         tsconfigRootDir: import.meta.dirname,
@@ -23,11 +23,11 @@ export const nestJsConfig = [
   },
   {
     rules: {
-      'turbo/no-undeclared-env-vars': 'off',
-      'no-useless-catch': 'off',
-      '@typescript-eslint/no-floating-promises': 'off',
-      '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/no-unsafe-argument': 'off',
+      "turbo/no-undeclared-env-vars": "off",
+      "no-useless-catch": "off",
+      "@typescript-eslint/no-floating-promises": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-unsafe-argument": "off",
     },
   },
-]
+];

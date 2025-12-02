@@ -1,5 +1,5 @@
-import { Server, Socket } from 'socket.io'
-import { Logger } from '@nestjs/common'
+import { Server, Socket } from "socket.io";
+import { Logger } from "@nestjs/common";
 import {
   SubscribeMessage,
   WebSocketGateway,
@@ -7,38 +7,40 @@ import {
   OnGatewayInit,
   OnGatewayConnection,
   OnGatewayDisconnect,
-} from '@nestjs/websockets'
+} from "@nestjs/websockets";
 
 @WebSocketGateway({ cors: true })
-export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
-  private readonly logger = new Logger(SocketGateway.name)
-  private static instance: SocketGateway
+export class SocketGateway
+  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
+{
+  private readonly logger = new Logger(SocketGateway.name);
+  private static instance: SocketGateway;
 
   @WebSocketServer()
-  server: Server
+  server: Server;
 
   afterInit(_server: Server) {
-    this.logger.log('Socket.IO server initialized')
+    this.logger.log("Socket.IO server initialized");
   }
 
   public static getInstance(): SocketGateway {
-    return SocketGateway.instance
+    return SocketGateway.instance;
   }
 
   handleConnection(client: Socket) {
-    this.logger.log(`Client connected: ${client.id}`)
+    this.logger.log(`Client connected: ${client.id}`);
   }
 
   handleDisconnect(client: Socket) {
-    this.logger.log(`Client disconnected: ${client.id}`)
+    this.logger.log(`Client disconnected: ${client.id}`);
   }
 
-  @SubscribeMessage('events')
+  @SubscribeMessage("events")
   handleEvent(_client: Socket, data: string): string {
-    return data
+    return data;
   }
 
   public emit(event: string, data: any) {
-    return this.server.emit(event, data)
+    return this.server.emit(event, data);
   }
 }

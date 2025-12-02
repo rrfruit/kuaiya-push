@@ -12,44 +12,44 @@
     <script>
       // 连接到你的 NestJS WebSocket 服务器
       // 假设你的后端运行在 3000 端口
-      const socket = io('http://localhost:3000')
+      const socket = io("http://localhost:3000");
 
-      socket.on('connect', () => {
-        console.log('Connected to WebSocket server!')
-        const li = document.createElement('li')
-        li.textContent = 'Successfully connected to the log server.'
-        li.style.color = 'green'
-        document.getElementById('logs').appendChild(li)
-      })
+      socket.on("connect", () => {
+        console.log("Connected to WebSocket server!");
+        const li = document.createElement("li");
+        li.textContent = "Successfully connected to the log server.";
+        li.style.color = "green";
+        document.getElementById("logs").appendChild(li);
+      });
 
       // 监听 'log' 事件
-      socket.on('log', log => {
-        console.log('Received log:', log)
-        const li = document.createElement('li')
+      socket.on("log", (log) => {
+        console.log("Received log:", log);
+        const li = document.createElement("li");
 
         // 格式化日志输出
-        const logObject = typeof log === 'string' ? JSON.parse(log) : log
-        const { timestamp, level, message, context, ...rest } = logObject
+        const logObject = typeof log === "string" ? JSON.parse(log) : log;
+        const { timestamp, level, message, context, ...rest } = logObject;
 
-        li.textContent = `[${new Date(timestamp).toLocaleString()}] [${level.toUpperCase()}] [${context}]: ${message}`
+        li.textContent = `[${new Date(timestamp).toLocaleString()}] [${level.toUpperCase()}] [${context}]: ${message}`;
 
         // 根据日志级别设置颜色
-        if (level === 'error') {
-          li.style.color = 'red'
-        } else if (level === 'warn') {
-          li.style.color = 'orange'
+        if (level === "error") {
+          li.style.color = "red";
+        } else if (level === "warn") {
+          li.style.color = "orange";
         }
 
-        document.getElementById('logs').appendChild(li)
-      })
+        document.getElementById("logs").appendChild(li);
+      });
 
-      socket.on('disconnect', () => {
-        console.log('Disconnected from WebSocket server!')
-        const li = document.createElement('li')
-        li.textContent = 'Disconnected from the log server.'
-        li.style.color = 'red'
-        document.getElementById('logs').appendChild(li)
-      })
+      socket.on("disconnect", () => {
+        console.log("Disconnected from WebSocket server!");
+        const li = document.createElement("li");
+        li.textContent = "Disconnected from the log server.";
+        li.style.color = "red";
+        document.getElementById("logs").appendChild(li);
+      });
     </script>
   </body>
 </html>

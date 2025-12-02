@@ -1,31 +1,37 @@
-import { IsString, IsOptional, IsEnum, IsNotEmpty, MaxLength } from 'class-validator'
-import { AccountStatus } from '@repo/db'
+import {
+  IsString,
+  IsOptional,
+  IsEnum,
+  IsNotEmpty,
+  MaxLength,
+} from "class-validator";
+import { AccountStatus } from "@repo/db";
 
 export class CreateAccountDto {
   @IsString()
   @IsNotEmpty()
-  platformId: string
+  platformId: string;
 
   @IsString()
   @IsOptional()
-  proxyId?: string
+  proxyId?: string;
 
   @IsString()
   @IsNotEmpty()
   @MaxLength(100)
-  displayName: string
+  displayName: string;
 
   @IsString()
   @IsOptional()
   @MaxLength(500)
-  coverUrl?: string
+  coverUrl?: string;
 
   @IsString()
   @IsOptional()
   @MaxLength(100)
-  platformUserId?: string
+  platformUserId?: string;
 
   @IsEnum(AccountStatus)
   @IsOptional()
-  status?: AccountStatus
+  status?: AccountStatus;
 }
