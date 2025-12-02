@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Put, Delete, Body, Param, Query } from '@nestjs/common'
+import { AccountStatus } from '@repo/db'
 import { AccountService } from './account.service'
 import { CreateAccountDto, UpdateAccountDto } from './dto'
-import { AccountStatus } from '@repo/db'
 
 @Controller('account')
 export class AccountController {

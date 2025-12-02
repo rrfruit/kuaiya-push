@@ -1,4 +1,4 @@
-import { nestJsConfig } from '@repo/eslint-config/nest';
+import { nestJsConfig } from '@repo/eslint-config/nest'
 
 /** @type {import("eslint").Linter.Config} */
 export default [
@@ -6,4 +6,4 @@ export default [
   {
     ignores: ['.prettierrc.mjs', 'eslint.config.mjs'],
   },
-];
+]

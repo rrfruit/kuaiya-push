@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common'
-import { PlatformService } from './platform.service'
 import { CreatePlatformDto, UpdatePlatformDto } from './dto'
+import { PlatformService } from './platform.service'
 
 @Controller('platform')
 export class PlatformController {

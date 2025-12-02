@@ -23,7 +23,7 @@
       })
 
       // 监听 'log' 事件
-      socket.on('log', (log) => {
+      socket.on('log', log => {
         console.log('Received log:', log)
         const li = document.createElement('li')
 

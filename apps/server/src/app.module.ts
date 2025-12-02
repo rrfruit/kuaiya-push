@@ -5,10 +5,10 @@ import { ScheduleModule } from '@nestjs/schedule'
 import { ServeStaticModule } from '@nestjs/serve-static'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
-import { BrowserModule } from './modules/browser/browser.module'
-import { SocketModule } from './modules/socket/socket.module'
-import { PlatformModule } from './modules/platform/platform.module'
 import { AccountModule } from './modules/account/account.module'
+import { BrowserModule } from './modules/browser/browser.module'
+import { PlatformModule } from './modules/platform/platform.module'
+import { SocketModule } from './modules/socket/socket.module'
 import { SharedModule } from './shared/shared.module'
 
 @Module({
