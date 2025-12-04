@@ -15,7 +15,10 @@ export class PrismaService
   private readonly logger = new Logger(PrismaService.name);
 
   constructor() {
-    const datasourceUrl = path.join(__dirname, "..", "data.db");
+    const datasourceUrl = path.join(
+      __dirname,
+      "../../../../packages/db/data.db",
+    );
     console.log("datasourceUrl: ", datasourceUrl);
     super({
       log: ["error"],

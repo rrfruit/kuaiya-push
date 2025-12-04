@@ -2,8 +2,9 @@ import { useQuery } from "@tanstack/react-query";
 import { getAccounts } from "@/api/account";
 import { columns, AccountWithRelations } from "./columns";
 import { DataTable } from "@/components/data-table";
-import { Loader2 } from "lucide-react";
+import { Loader2, PlusIcon } from "lucide-react";
 import { AccountStatusEnum } from "@/types/enum";
+import { Button } from "@repo/ui/components/ui/button";
 
 export default function AccountPage() {
   const { data, isLoading, isError, error } = useQuery({
@@ -47,11 +48,15 @@ export default function AccountPage() {
     <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
       <div className="flex items-center justify-between space-y-2">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Accounts</h2>
+          <h2 className="text-2xl font-bold tracking-tight">账号管理</h2>
           <p className="text-muted-foreground">
-            Manage your social media accounts and their status.
+            管理你的社交媒体账号及其状态。
           </p>
         </div>
+        <Button size="sm" onClick={() => {}}>
+          <PlusIcon className="h-4 w-4" />
+          添加账号
+        </Button>
       </div>
       <DataTable 
         data={accounts} 
