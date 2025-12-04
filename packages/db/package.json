@@ -21,7 +21,6 @@
     "studio": "prisma studio"
   },
   "dependencies": {
-    "@nestjs/common": "catalog:",
     "@prisma/client": "catalog:",
     "@prisma/client-runtime-utils": "^7.0.0"
   },
