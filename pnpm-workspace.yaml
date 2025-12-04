@@ -3,16 +3,16 @@ packages:
   - packages/*
 
 catalog:
-  "@eslint/js": ^9.39.1
-  "@nestjs/common": ^11.1.9
-  "@prisma/client": ^6.19.0
-  "@tailwindcss/vite": ^4.1.17
-  "@types/eslint": ^9
-  "@types/node": ^24
-  "@vitejs/plugin-react": 5.1.1
+  '@eslint/js': ^9.39.1
+  '@nestjs/common': ^11.1.9
+  '@prisma/client': ^6.19.0
+  '@tailwindcss/vite': ^4.1.17
+  '@types/eslint': ^9
+  '@types/node': ^24
+  '@vitejs/plugin-react': 5.1.1
   eslint: ^9.39.1
   lucide-react: 0.552.0
-  prettier: ^3.6.2
+  prettier: ^3.7.4
   prisma: ^6.19.0
   tailwindcss: ^4.1.17
   typescript: ^5.9.3
@@ -21,7 +21,7 @@ catalog:
 
 catalogs:
   react19:
-    "@types/react": ^19.2.2
-    "@types/react-dom": ^19.2.2
+    '@types/react': ^19.2.2
+    '@types/react-dom': ^19.2.2
     react: ^19.2.0
     react-dom: ^19.2.0
