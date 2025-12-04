@@ -25,7 +25,15 @@ export interface AccountWithRelations extends Account {
   };
 }
 
-export const columns: ColumnDef<AccountWithRelations>[] = [
+interface GetColumnsProps {
+  onEdit: (account: AccountWithRelations) => void;
+  onDelete: (account: AccountWithRelations) => void;
+}
+
+export const getColumns = ({
+  onEdit,
+  onDelete,
+}: GetColumnsProps): ColumnDef<AccountWithRelations>[] => [
   {
     accessorKey: "displayName",
     header: ({ column }) => (
@@ -116,8 +124,13 @@ export const columns: ColumnDef<AccountWithRelations>[] = [
               Copy Account ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Edit Account</DropdownMenuItem>
-            <DropdownMenuItem className="text-destructive">
+            <DropdownMenuItem onClick={() => onEdit(account)}>
+              Edit Account
+            </DropdownMenuItem>
+            <DropdownMenuItem 
+              className="text-destructive"
+              onClick={() => onDelete(account)}
+            >
               Delete Account
             </DropdownMenuItem>
           </DropdownMenuContent>

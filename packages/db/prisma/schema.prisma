@@ -61,6 +61,7 @@ model Platform {
   id          String         @id @default(cuid())
   name        String
   code        String         @unique
+  logoUrl     String?
   description String?
   apiBaseUrl  String?
   status      PlatformStatus @default(ACTIVE)
