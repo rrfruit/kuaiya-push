@@ -22,9 +22,9 @@ export class AccountController {
   }
 
   @Get()
-  findAll(@Query("platformId") platformId?: string) {
-    if (platformId) {
-      return this.accountService.findByPlatform(platformId);
+  findAll(@Query("platformCode") platformCode?: string) {
+    if (platformCode) {
+      return this.accountService.findByPlatform(platformCode);
     }
     return this.accountService.findAll();
   }

@@ -10,7 +10,7 @@ import { AccountStatus } from "@repo/db";
 export class CreateAccountDto {
   @IsString()
   @IsNotEmpty()
-  platformId: string;
+  platformCode: string;
 
   @IsString()
   @IsOptional()

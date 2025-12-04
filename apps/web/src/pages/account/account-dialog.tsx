@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 
 import {
@@ -33,11 +33,11 @@ import {
 
 import { Account } from "@repo/db/types";
 import { createAccount, updateAccount } from "@/api/account";
-import { getPlatforms } from "@/api/platform";
+import { platforms } from "@repo/shared";
 
 const formSchema = z.object({
   displayName: z.string().min(1, "显示名称不能为空"),
-  platformId: z.string().min(1, "请选择平台"),
+  platformCode: z.string().min(1, "请选择平台"),
   coverUrl: z.string().optional(),
 });
 
@@ -53,17 +53,11 @@ export function AccountDialog({ open, onOpenChange, account }: AccountDialogProp
   const queryClient = useQueryClient();
   const isEdit = !!account;
 
-  const { data: platforms = [], isLoading: isLoadingPlatforms } = useQuery({
-    queryKey: ["platforms"],
-    queryFn: () => getPlatforms().then((res) => res.data),
-    enabled: open,
-  });
-
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       displayName: "",
-      platformId: "",
+      platformCode: "",
       coverUrl: "",
     },
   });
@@ -73,7 +67,7 @@ export function AccountDialog({ open, onOpenChange, account }: AccountDialogProp
     if (open) {
       form.reset({
         displayName: account?.displayName || "",
-        platformId: account?.platformId || "",
+        platformCode: account?.platformCode || "",
         coverUrl: account?.coverUrl || "",
       });
     }
@@ -120,14 +114,14 @@ export function AccountDialog({ open, onOpenChange, account }: AccountDialogProp
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
-              name="platformId"
+              name="platformCode"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>平台</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
-                    disabled={isEdit || isLoadingPlatforms}
+                    disabled={isEdit}
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -136,7 +130,7 @@ export function AccountDialog({ open, onOpenChange, account }: AccountDialogProp
                     </FormControl>
                     <SelectContent>
                       {platforms.map((platform) => (
-                        <SelectItem key={platform.id} value={platform.id}>
+                        <SelectItem key={platform.code} value={platform.code}>
                           {platform.name}
                         </SelectItem>
                       ))}

@@ -7,7 +7,6 @@ import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { AccountModule } from "./modules/account/account.module";
 import { BrowserModule } from "./modules/browser/browser.module";
-import { PlatformModule } from "./modules/platform/platform.module";
 import { SocketModule } from "./modules/socket/socket.module";
 import { SharedModule } from "./shared/shared.module";
 
@@ -23,7 +22,6 @@ import { SharedModule } from "./shared/shared.module";
     ScheduleModule.forRoot(),
     BrowserModule,
     SocketModule,
-    PlatformModule,
     AccountModule,
   ],
   controllers: [AppController],

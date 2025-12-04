@@ -1,7 +1,6 @@
 import {
   Injectable,
   NotFoundException,
-  ConflictException,
 } from "@nestjs/common";
 import { PrismaService } from "@/shared/prisma.service";
 import { CreateAccountDto, UpdateAccountDto } from "./dto";
@@ -14,7 +13,6 @@ export class AccountService {
     return this.prisma.account.create({
       data: createAccountDto,
       include: {
-        platform: true,
         proxy: true,
       },
     });
@@ -23,18 +21,16 @@ export class AccountService {
   async findAll() {
     return this.prisma.account.findMany({
       include: {
-        platform: true,
         proxy: true,
       },
       orderBy: { createdAt: "desc" },
     });
   }
 
-  async findByPlatform(platformId: string) {
+  async findByPlatform(platformCode: string) {
     return this.prisma.account.findMany({
-      where: { platformId },
+      where: { platformCode },
       include: {
-        platform: true,
         proxy: true,
       },
       orderBy: { createdAt: "desc" },
@@ -45,7 +41,6 @@ export class AccountService {
     const account = await this.prisma.account.findUnique({
       where: { id },
       include: {
-        platform: true,
         proxy: true,
       },
     });
@@ -63,7 +58,6 @@ export class AccountService {
       where: { id },
       data: updateAccountDto,
       include: {
-        platform: true,
         proxy: true,
       },
     });
@@ -88,7 +82,6 @@ export class AccountService {
         lastSyncedAt: new Date(),
       },
       include: {
-        platform: true,
         proxy: true,
       },
     });
