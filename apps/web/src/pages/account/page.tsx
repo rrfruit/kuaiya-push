@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getAccounts } from "@/api/account";
 import { columns, AccountWithRelations } from "./columns";
 import { DataTable } from "@/components/data-table";
-import { AccountStatus } from "@repo/db/types";
+import { AccountStatus } from "@repo/db";
 import { Loader2 } from "lucide-react";
 
 export default function AccountPage() {

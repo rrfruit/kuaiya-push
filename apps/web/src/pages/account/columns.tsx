@@ -1,5 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { Account, AccountStatus } from "@repo/db/types";
+import { Account, AccountStatus } from "@repo/db";
 import { DataTableColumnHeader } from "@/components/data-table/column-header";
 import { Badge } from "@repo/ui/components/ui/badge";
 import { Button } from "@repo/ui/components/ui/button";

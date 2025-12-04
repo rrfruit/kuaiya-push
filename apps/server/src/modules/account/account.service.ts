@@ -3,7 +3,7 @@ import {
   NotFoundException,
   ConflictException,
 } from "@nestjs/common";
-import { PrismaService } from "@repo/db";
+import { PrismaService } from "@/shared/prisma.service";
 import { CreateAccountDto, UpdateAccountDto } from "./dto";
 
 @Injectable()

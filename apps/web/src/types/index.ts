@@ -1,4 +1,4 @@
-export * from "@repo/db/types";
+export * from "@repo/db";
 
 export type ApiResponse<T> = {
   code: number;
