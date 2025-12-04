@@ -43,3 +43,4 @@ export const platforms: Platform[] = [
 ];
 
 export default platforms;
+
