@@ -1,5 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { Account, AccountStatus } from "@repo/db";
+import { Account, AccountStatus } from "@/types";
+import { AccountStatusEnum } from "@/types/enum";
 import { DataTableColumnHeader } from "@/components/data-table/column-header";
 import { Badge } from "@repo/ui/components/ui/badge";
 import { Button } from "@repo/ui/components/ui/button";
@@ -58,9 +59,9 @@ export const columns: ColumnDef<AccountWithRelations>[] = [
       return (
         <Badge
           variant={
-            status === AccountStatus.LOGGED_IN
+            status === AccountStatusEnum.LOGGED_IN
               ? "default"
-              : status === AccountStatus.LOGIN_EXPIRED
+              : status === AccountStatusEnum.LOGIN_EXPIRED
               ? "destructive"
               : "secondary"
           }

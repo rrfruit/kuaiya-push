@@ -2,8 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import { getAccounts } from "@/api/account";
 import { columns, AccountWithRelations } from "./columns";
 import { DataTable } from "@/components/data-table";
-import { AccountStatus } from "@repo/db";
 import { Loader2 } from "lucide-react";
+import { AccountStatusEnum } from "@/types/enum";
 
 export default function AccountPage() {
   const { data, isLoading, isError, error } = useQuery({
@@ -19,9 +19,9 @@ export default function AccountPage() {
       columnId: "status",
       title: "Status",
       options: [
-        { label: "Logged In", value: AccountStatus.LOGGED_IN },
-        { label: "Not Logged In", value: AccountStatus.NOT_LOGGED_IN },
-        { label: "Login Expired", value: AccountStatus.LOGIN_EXPIRED },
+        { label: "Logged In", value: AccountStatusEnum.LOGGED_IN },
+        { label: "Not Logged In", value: AccountStatusEnum.NOT_LOGGED_IN },
+        { label: "Login Expired", value: AccountStatusEnum.LOGIN_EXPIRED },
       ],
     },
   ];
