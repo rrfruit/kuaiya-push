@@ -1,10 +1,10 @@
 {
   "name": "@repo/db",
   "version": "1.0.0",
-  "main": "./dist/index.js",
+  "main": "./generated/client/index.js",
   "types": "./generated/client/index.d.ts",
   "exports": {
-    ".": "./dist/index.js",
+    ".": "./generated/client/index.js",
     "./types": "./generated/client/index.d.ts"
   },
   "scripts": {
