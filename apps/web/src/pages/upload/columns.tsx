@@ -40,7 +40,7 @@ export const getColumns = ({
       const file = row.original;
       const isImage = file.type === FileTypeEnum.IMAGE;
       return (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 cursor-pointer hover:text-blue-500" onClick={() => onPreview(file)}>
           {isImage ? (
             <Image className="h-4 w-4 text-blue-500" />
           ) : (
