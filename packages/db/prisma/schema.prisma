@@ -11,41 +11,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum WorkStatus {
-  DRAFT
-  SCHEDULED
-  PUBLISHING
-  PUBLISHED
-  FAILED
-}
-
-enum PublishStatus {
-  PENDING
-  SCHEDULED
-  IN_PROGRESS
-  SUCCESS
-  FAILED
-  CANCELLED
-}
-
-enum ProxyType {
-  HTTP
-  HTTPS
-  SOCKS5
-}
-
-enum ProxyStatus {
-  ACTIVE
-  INACTIVE
-  EXPIRED
-}
-
-enum WorkType {
-  TEXT
-  IMAGE
-  VIDEO
-}
-
 model Account {
   id             String    @id @default(cuid())
   platformCode   String
@@ -60,9 +25,15 @@ model Account {
   updatedAt      DateTime  @updatedAt
 
   proxy   Proxy?              @relation(fields: [proxyId], references: [id], onDelete: SetNull)
-  records WorkPublishRecord[]
+  publishes WorkPublish[]
 
   @@unique([platformCode, platformUserId])
+}
+
+enum WorkType {
+  TEXT
+  IMAGE
+  VIDEO
 }
 
 model Work {
@@ -77,45 +48,58 @@ model Work {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  records WorkPublishRecord[]
+  publishes WorkPublish[]
 }
 
-model WorkPublishPlan {
+enum PublishStatus {
+  PENDING
+  IN_PROGRESS
+  SUCCESS
+  FAILED
+  CANCELLED
+}
+
+model WorkPublish {
   id           String        @id @default(cuid())
   workId       String
   accountId    String
-  platformCode String
+  isImmediate  Boolean       @default(true)
   status       PublishStatus @default(PENDING)
   scheduledAt  DateTime?
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
 
+  platforms WorkPublishPlatform[]
+
+  work    Work    @relation(fields: [workId], references: [id], onDelete: Cascade)
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
   @@unique([workId, accountId])
-  @@index([platformCode])
   @@index([status])
 }
 
-model WorkPublishRecord {
+model WorkPublishPlatform {
   id           String        @id @default(cuid())
-  workId       String
-  accountId    String
-  platformCode String
+  publishId    String
+  platformCode String        @unique
   status       PublishStatus @default(PENDING)
-  scheduledAt  DateTime?
+  isSuccess    Boolean       @default(false)
+  errorMessage String?
   startedAt    DateTime?
   publishedAt  DateTime?
-  retryCount   Int           @default(0)
-  responseData Json?
-  errorMessage String?
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
 
-  work    Work             @relation(fields: [workId], references: [id], onDelete: Cascade)
-  account Account          @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  publish WorkPublish @relation(fields: [publishId], references: [id], onDelete: Cascade)
 
-  @@unique([workId, accountId])
   @@index([platformCode])
   @@index([status])
+}
+
+enum ProxyType {
+  HTTP
+  HTTPS
+  SOCKS5
 }
 
 model Proxy {
