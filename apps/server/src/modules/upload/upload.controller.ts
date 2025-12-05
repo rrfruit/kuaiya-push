@@ -71,11 +71,22 @@ export class UploadController {
   }
 
   @Get()
-  findAll(@Query("type") type?: string) {
-    if (type && Object.values(FileType).includes(type as FileType)) {
-      return this.uploadService.findByType(type as FileType);
-    }
-    return this.uploadService.findAll();
+  findAll(
+    @Query("type") type?: string,
+    @Query("page") page?: string,
+    @Query("pageSize") pageSize?: string,
+  ) {
+    const pageNum = page ? parseInt(page, 10) : 1;
+    const pageSizeNum = pageSize ? parseInt(pageSize, 10) : 10;
+    const fileType = type && Object.values(FileType).includes(type as FileType)
+      ? (type as FileType)
+      : undefined;
+
+    return this.uploadService.findAllPaginated({
+      page: pageNum,
+      pageSize: pageSizeNum,
+      type: fileType,
+    });
   }
 
   @Get(":id")

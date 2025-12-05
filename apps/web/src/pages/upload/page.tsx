@@ -11,19 +11,28 @@ import { PreviewDialog } from "./preview-dialog";
 import { ConfirmDialog } from "@/components/confirm-dialog";
 import { toast } from "sonner";
 import { UploadFile } from "@/types";
+import { PaginationState } from "@tanstack/react-table";
 
 export default function UploadPage() {
   const queryClient = useQueryClient();
   const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [previewFile, setPreviewFile] = useState<UploadFile | null>(null);
   const [deleteFileData, setDeleteFileData] = useState<UploadFile | null>(null);
-
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["uploadFiles"],
-    queryFn: () => getUploadFiles(),
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
   });
 
-  const files = data?.data || [];
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["uploadFiles", pagination.pageIndex, pagination.pageSize],
+    queryFn: () => getUploadFiles({
+      page: pagination.pageIndex + 1,
+      pageSize: pagination.pageSize,
+    }),
+  });
+
+  const files = data?.data?.data || [];
+  const pageCount = data?.data?.totalPages || 0;
 
   const deleteMutation = useMutation({
     mutationFn: deleteUploadFile,
@@ -100,6 +109,10 @@ export default function UploadPage() {
         searchKey="filename"
         searchPlaceholder="搜索文件名..."
         filters={filters}
+        manualPagination
+        pageCount={pageCount}
+        pagination={pagination}
+        onPaginationChange={setPagination}
       />
 
       <UploadDialog open={isUploadOpen} onOpenChange={setIsUploadOpen} />

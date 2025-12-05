@@ -2,9 +2,27 @@ import request from "@/lib/request";
 import { http } from "@/lib/request";
 import { UploadFile, FileType } from "@/types";
 
-export function getUploadFiles(type?: FileType) {
-  return request<UploadFile[]>("/upload", {
-    params: type ? { type } : undefined,
+export interface PaginatedResult<T> {
+  data: T[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+}
+
+export interface GetUploadFilesParams {
+  page?: number;
+  pageSize?: number;
+  type?: FileType;
+}
+
+export function getUploadFiles(params?: GetUploadFilesParams) {
+  return request<PaginatedResult<UploadFile>>("/upload", {
+    params: params ? {
+      page: params.page,
+      pageSize: params.pageSize,
+      type: params.type,
+    } : undefined,
     method: "GET",
   });
 }

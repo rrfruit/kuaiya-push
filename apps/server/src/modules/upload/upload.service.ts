@@ -13,6 +13,20 @@ export interface UploadedFileInfo {
   type: FileType;
 }
 
+export interface PaginationParams {
+  page?: number;
+  pageSize?: number;
+  type?: FileType;
+}
+
+export interface PaginatedResult<T> {
+  data: T[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+}
+
 @Injectable()
 export class UploadService {
   private readonly logger = new Logger(UploadService.name);
@@ -44,6 +58,32 @@ export class UploadService {
     return this.prisma.uploadFile.findMany({
       orderBy: { createdAt: "desc" },
     });
+  }
+
+  async findAllPaginated(params: PaginationParams): Promise<PaginatedResult<any>> {
+    const page = params.page || 1;
+    const pageSize = params.pageSize || 10;
+    const skip = (page - 1) * pageSize;
+
+    const where = params.type ? { type: params.type } : {};
+
+    const [data, total] = await Promise.all([
+      this.prisma.uploadFile.findMany({
+        where,
+        orderBy: { createdAt: "desc" },
+        skip,
+        take: pageSize,
+      }),
+      this.prisma.uploadFile.count({ where }),
+    ]);
+
+    return {
+      data,
+      total,
+      page,
+      pageSize,
+      totalPages: Math.ceil(total / pageSize),
+    };
   }
 
   async findOne(id: string) {
