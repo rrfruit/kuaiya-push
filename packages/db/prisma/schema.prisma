@@ -38,10 +38,10 @@ enum WorkType {
 
 model Work {
   id          String   @id @default(cuid())
+  type        WorkType @default(VIDEO)
   title       String
-  type        WorkType @default(TEXT)
   description String
-  mediaUrl    String
+  mediaUrl    String?
   coverUrl    String?
   content     String?
   imgs        String?

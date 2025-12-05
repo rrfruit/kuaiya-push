@@ -1,7 +1,9 @@
-import { AccountStatus } from "./index";
+import { PublishStatus } from "./index";
 
-export const AccountStatusEnum: Record<AccountStatus, AccountStatus> = {
-  NOT_LOGGED_IN: "NOT_LOGGED_IN",
-  LOGGED_IN: "LOGGED_IN",
-  LOGIN_EXPIRED: "LOGIN_EXPIRED",
+export const PublishStatusEnum: Record<PublishStatus, PublishStatus> = {
+  PENDING: "PENDING",
+  IN_PROGRESS: "IN_PROGRESS",
+  SUCCESS: "SUCCESS",
+  FAILED: "FAILED",
+  CANCELLED: "CANCELLED",
 };
