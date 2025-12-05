@@ -117,3 +117,20 @@ model Proxy {
 
   accounts Account[]
 }
+
+enum FileType {
+  IMAGE
+  VIDEO
+}
+
+model UploadFile {
+  id          String   @id @default(cuid())
+  filename    String // 原始文件名
+  storageName String // 存储文件名（避免重名）
+  path        String // 存储路径
+  mimeType    String // MIME 类型
+  size        Int // 文件大小（字节）
+  type        FileType // 文件类型
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

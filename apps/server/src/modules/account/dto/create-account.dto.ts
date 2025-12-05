@@ -1,16 +1,14 @@
 import {
   IsString,
   IsOptional,
-  IsEnum,
   IsNotEmpty,
   MaxLength,
 } from "class-validator";
-import { AccountStatus } from "@repo/db";
 
 export class CreateAccountDto {
   @IsString()
   @IsNotEmpty()
-  platformCode: string;
+  platform: string;
 
   @IsString()
   @IsOptional()
@@ -30,8 +28,4 @@ export class CreateAccountDto {
   @IsOptional()
   @MaxLength(100)
   platformUserId?: string;
-
-  @IsEnum(AccountStatus)
-  @IsOptional()
-  status?: AccountStatus;
 }

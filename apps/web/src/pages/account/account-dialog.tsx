@@ -31,13 +31,13 @@ import {
   SelectValue,
 } from "@repo/ui/components/ui/select";
 
-import { Account } from "@repo/db/types";
+import { AccountWithRelations } from "@/types";
 import { createAccount, updateAccount } from "@/api/account";
 import { platforms } from "@repo/shared";
 
 const formSchema = z.object({
   displayName: z.string().min(1, "显示名称不能为空"),
-  platformCode: z.string().min(1, "请选择平台"),
+  platform: z.string().min(1, "请选择平台"),
   coverUrl: z.string().optional(),
 });
 
@@ -46,7 +46,7 @@ type FormValues = z.infer<typeof formSchema>;
 interface AccountDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  account?: Account | null;
+  account?: AccountWithRelations | null;
 }
 
 export function AccountDialog({ open, onOpenChange, account }: AccountDialogProps) {
@@ -57,7 +57,7 @@ export function AccountDialog({ open, onOpenChange, account }: AccountDialogProp
     resolver: zodResolver(formSchema),
     defaultValues: {
       displayName: "",
-      platformCode: "",
+      platform: "",
       coverUrl: "",
     },
   });
@@ -67,7 +67,7 @@ export function AccountDialog({ open, onOpenChange, account }: AccountDialogProp
     if (open) {
       form.reset({
         displayName: account?.displayName || "",
-        platformCode: account?.platformCode || "",
+        platform: account?.platform || "",
         coverUrl: account?.coverUrl || "",
       });
     }
@@ -114,7 +114,7 @@ export function AccountDialog({ open, onOpenChange, account }: AccountDialogProp
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
-              name="platformCode"
+              name="platform"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>平台</FormLabel>
@@ -130,7 +130,7 @@ export function AccountDialog({ open, onOpenChange, account }: AccountDialogProp
                     </FormControl>
                     <SelectContent>
                       {platforms.map((platform) => (
-                        <SelectItem key={platform.code} value={platform.code}>
+                        <SelectItem key={platform.name} value={platform.code}>
                           {platform.name}
                         </SelectItem>
                       ))}

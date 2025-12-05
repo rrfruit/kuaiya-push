@@ -9,6 +9,7 @@ import {
   ServerIcon,
   SettingsIcon,
   CirclePlusIcon,
+  UploadIcon,
 } from "lucide-react";
 
 import { NavUser } from "./nav-user";
@@ -41,6 +42,11 @@ export const data = {
       title: "账号",
       url: "/account",
       icon: UserIcon,
+    },
+    {
+      title: "文件管理",
+      url: "/upload",
+      icon: UploadIcon,
     },
     {
       title: "代理",

@@ -8,6 +8,7 @@ import { AppService } from "./app.service";
 import { AccountModule } from "./modules/account/account.module";
 import { BrowserModule } from "./modules/browser/browser.module";
 import { SocketModule } from "./modules/socket/socket.module";
+import { UploadModule } from "./modules/upload/upload.module";
 import { SharedModule } from "./shared/shared.module";
 
 @Module({
@@ -16,13 +17,20 @@ import { SharedModule } from "./shared/shared.module";
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, "..", "..", "www"),
-    }),
+    ServeStaticModule.forRoot(
+      {
+        rootPath: join(__dirname, "..", "..", "www"),
+      },
+      {
+        rootPath: join(process.cwd(), "uploads"),
+        serveRoot: "/uploads",
+      },
+    ),
     ScheduleModule.forRoot(),
     BrowserModule,
     SocketModule,
     AccountModule,
+    UploadModule,
   ],
   controllers: [AppController],
   providers: [AppService],

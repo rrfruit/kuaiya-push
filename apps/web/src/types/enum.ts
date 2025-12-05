@@ -1,4 +1,4 @@
-import { PublishStatus, WorkType } from "./index";
+import { PublishStatus, WorkType, FileType } from "./index";
 
 export const PublishStatusEnum: Record<PublishStatus, PublishStatus> = {
   PENDING: "PENDING",
@@ -10,6 +10,11 @@ export const PublishStatusEnum: Record<PublishStatus, PublishStatus> = {
 
 export const WorkTypeEnum: Record<WorkType, WorkType> = {
   TEXT: "TEXT",
+  IMAGE: "IMAGE",
+  VIDEO: "VIDEO",
+};
+
+export const FileTypeEnum: Record<FileType, FileType> = {
   IMAGE: "IMAGE",
   VIDEO: "VIDEO",
 };

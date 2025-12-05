@@ -1,8 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { Account, AccountStatus } from "@/types";
-import { AccountStatusEnum } from "@/types/enum";
+import { AccountWithRelations } from "@/types";
 import { DataTableColumnHeader } from "@/components/data-table/column-header";
-import { Badge } from "@repo/ui/components/ui/badge";
 import { Button } from "@repo/ui/components/ui/button";
 import {
   DropdownMenu,
@@ -13,17 +11,6 @@ import {
   DropdownMenuTrigger,
 } from "@repo/ui/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
-
-export interface AccountWithRelations extends Account {
-  platform?: {
-    name: string;
-    code: string;
-  };
-  proxy?: {
-    host: string;
-    port: number;
-  };
-}
 
 interface GetColumnsProps {
   onEdit: (account: AccountWithRelations) => void;
@@ -55,31 +42,6 @@ export const getColumns = ({
       ) : (
         "N/A"
       );
-    },
-  },
-  {
-    accessorKey: "status",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Status" />
-    ),
-    cell: ({ row }) => {
-      const status = row.getValue("status") as AccountStatus;
-      return (
-        <Badge
-          variant={
-            status === AccountStatusEnum.LOGGED_IN
-              ? "default"
-              : status === AccountStatusEnum.LOGIN_EXPIRED
-              ? "destructive"
-              : "secondary"
-          }
-        >
-          {status.replace(/_/g, " ")}
-        </Badge>
-      );
-    },
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id));
     },
   },
   {

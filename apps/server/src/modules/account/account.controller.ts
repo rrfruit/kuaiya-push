@@ -8,7 +8,6 @@ import {
   Param,
   Query,
 } from "@nestjs/common";
-import { AccountStatus } from "@repo/db";
 import { AccountService } from "./account.service";
 import { CreateAccountDto, UpdateAccountDto } from "./dto";
 
@@ -22,9 +21,9 @@ export class AccountController {
   }
 
   @Get()
-  findAll(@Query("platformCode") platformCode?: string) {
-    if (platformCode) {
-      return this.accountService.findByPlatform(platformCode);
+  findAll(@Query("platform") platform?: string) {
+    if (platform) {
+      return this.accountService.findByPlatform(platform);
     }
     return this.accountService.findAll();
   }
@@ -37,11 +36,6 @@ export class AccountController {
   @Put(":id")
   update(@Param("id") id: string, @Body() updateAccountDto: UpdateAccountDto) {
     return this.accountService.update(id, updateAccountDto);
-  }
-
-  @Put(":id/status")
-  updateStatus(@Param("id") id: string, @Body("status") status: AccountStatus) {
-    return this.accountService.updateStatus(id, status);
   }
 
   @Delete(":id")

@@ -3,6 +3,7 @@ import MainLayout from "@/components/layouts/main-layout";
 import DashboardPage from "@/pages/dashboard/page";
 import ErrorPage from "@/pages/error/page";
 import AccountPage from "@/pages/account/page";
+import UploadPage from "@/pages/upload/page";
 
 export const router = createBrowserRouter([
   {
@@ -17,6 +18,10 @@ export const router = createBrowserRouter([
       {
         path: "account",
         element: <AccountPage />,
+      },
+      {
+        path: "upload",
+        element: <UploadPage />,
       },
     ],
   },

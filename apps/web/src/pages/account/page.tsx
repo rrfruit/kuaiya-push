@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getAccounts, deleteAccount } from "@/api/account";
-import { getColumns, AccountWithRelations } from "./columns";
+import { getColumns } from "./columns";
+import { AccountWithRelations } from "@/types";
 import { DataTable } from "@/components/data-table";
 import { Loader2, PlusIcon } from "lucide-react";
-import { AccountStatusEnum } from "@/types/enum";
 import { Button } from "@repo/ui/components/ui/button";
 import { AccountDialog } from "./account-dialog";
 import { ConfirmDialog } from "@/components/confirm-dialog";
@@ -38,12 +38,11 @@ export default function AccountPage() {
   // Define filters for the DataTable
   const filters = [
     {
-      columnId: "status",
-      title: "Status",
+      columnId: "isLoggedIn",
+      title: "isLoggedIn",
       options: [
-        { label: "Logged In", value: AccountStatusEnum.LOGGED_IN },
-        { label: "Not Logged In", value: AccountStatusEnum.NOT_LOGGED_IN },
-        { label: "Login Expired", value: AccountStatusEnum.LOGIN_EXPIRED },
+        { label: "是", value: '1' },
+        { label: "否", value: '0' },
       ],
     },
   ];

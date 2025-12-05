@@ -27,9 +27,9 @@ export class AccountService {
     });
   }
 
-  async findByPlatform(platformCode: string) {
+  async findByPlatform(platform: string) {
     return this.prisma.account.findMany({
-      where: { platformCode },
+      where: { platform },
       include: {
         proxy: true,
       },
@@ -69,21 +69,6 @@ export class AccountService {
 
     return this.prisma.account.delete({
       where: { id },
-    });
-  }
-
-  async updateStatus(id: string, status: CreateAccountDto["status"]) {
-    await this.findOne(id);
-
-    return this.prisma.account.update({
-      where: { id },
-      data: {
-        status,
-        lastSyncedAt: new Date(),
-      },
-      include: {
-        proxy: true,
-      },
     });
   }
 }

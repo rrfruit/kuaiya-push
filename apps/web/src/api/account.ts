@@ -1,20 +1,19 @@
 import request from "@/lib/request";
-import { Account, AccountStatus } from "@repo/db/types";
+import { Account } from "@repo/db/types";
 
 export interface CreateAccountDto {
-  platformCode: string;
+  platform: string;
   displayName: string;
   proxyId?: string;
   coverUrl?: string;
   platformUserId?: string;
-  status?: AccountStatus;
 }
 
 export type UpdateAccountDto = Partial<CreateAccountDto>;
 
-export function getAccounts(platformCode?: string) {
+export function getAccounts(platform?: string) {
   return request<Account[]>("/account", {
-    params: { platformCode },
+    params: { platform },
     method: "GET",
   });
 }
@@ -36,13 +35,6 @@ export function updateAccount(id: string, data: UpdateAccountDto) {
   return request<Account>(`/account/${id}`, {
     method: "PUT",
     data,
-  });
-}
-
-export function updateAccountStatus(id: string, status: AccountStatus) {
-  return request<Account>(`/account/${id}/status`, {
-    method: "PUT",
-    data: { status },
   });
 }
 
