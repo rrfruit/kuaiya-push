@@ -12,6 +12,8 @@ import { LoggingInterceptor } from "./common/interceptors/logging.interceptor";
 import { TransformInterceptor } from "./common/interceptors/transform.interceptor";
 import { winstonConfig } from "./winston/winston.config";
 
+import { AllExceptionsFilter } from "./common/filters/all-exceptions.filter";
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     cors: true,
@@ -22,13 +24,10 @@ async function bootstrap() {
 
   app.enableShutdownHooks();
   app.setGlobalPrefix("api");
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      transform: true,
-      forbidNonWhitelisted: true,
-    }),
-  );
+  
+  // 全局过滤器
+  app.useGlobalFilters(new AllExceptionsFilter());
+
   app.useGlobalInterceptors(
     new LoggingInterceptor(app.get(Reflector)),
     new TransformInterceptor(app.get(Reflector)),

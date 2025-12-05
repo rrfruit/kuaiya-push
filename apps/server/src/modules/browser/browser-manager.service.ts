@@ -4,7 +4,7 @@ import puppeteer from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
 import { Injectable, Logger, OnApplicationShutdown } from "@nestjs/common";
 import { Cron, CronExpression } from "@nestjs/schedule";
-import lock from "../../common/utils/lock";
+import lock from "@/common/utils/lock";
 
 puppeteer.use(StealthPlugin());
 

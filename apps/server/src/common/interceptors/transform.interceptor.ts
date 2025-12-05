@@ -27,7 +27,7 @@ export class TransformInterceptor implements NestInterceptor {
     // 默认同步处理
     return next.handle().pipe(
       map((data) => ({
-        code: 0,
+        code: 200,
         message: "success",
         data,
       })),

@@ -3,23 +3,12 @@
 
 generator client {
   provider = "prisma-client-js"
-  output = "../generated/client"
+  output   = "../generated/client"
 }
 
 datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
-}
-
-enum PlatformStatus {
-  ACTIVE
-  INACTIVE
-}
-
-enum AccountStatus {
-  NOT_LOGGED_IN
-  LOGGED_IN
-  LOGIN_EXPIRED
 }
 
 enum WorkStatus {
@@ -46,8 +35,8 @@ enum ProxyType {
 }
 
 enum ProxyStatus {
-  AVAILABLE
-  UNAVAILABLE
+  ACTIVE
+  INACTIVE
   EXPIRED
 }
 
@@ -58,25 +47,26 @@ enum WorkType {
 }
 
 model Account {
-  id             String        @id @default(cuid())
+  id             String    @id @default(cuid())
   platformCode   String
   proxyId        String?
   displayName    String
   coverUrl       String?
   platformUserId String?
-  status         AccountStatus @default(NOT_LOGGED_IN)
+  isActive       Boolean   @default(true)
+  isLoggedIn     Boolean   @default(false)
   lastSyncedAt   DateTime?
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 
-  proxy    Proxy?              @relation(fields: [proxyId], references: [id], onDelete: SetNull)
-  records  WorkPublishRecord[]
+  proxy   Proxy?              @relation(fields: [proxyId], references: [id], onDelete: SetNull)
+  records WorkPublishRecord[]
 
   @@unique([platformCode, platformUserId])
 }
 
 model Work {
-  id          String     @id @default(cuid())
+  id          String   @id @default(cuid())
   title       String
   type        WorkType @default(TEXT)
   description String
@@ -84,11 +74,25 @@ model Work {
   coverUrl    String?
   content     String?
   imgs        String?
-  status      WorkStatus @default(DRAFT)
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   records WorkPublishRecord[]
+}
+
+model WorkPublishPlan {
+  id           String        @id @default(cuid())
+  workId       String
+  accountId    String
+  platformCode String
+  status       PublishStatus @default(PENDING)
+  scheduledAt  DateTime?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@unique([workId, accountId])
+  @@index([platformCode])
+  @@index([status])
 }
 
 model WorkPublishRecord {
@@ -106,8 +110,8 @@ model WorkPublishRecord {
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
 
-  work     Work     @relation(fields: [workId], references: [id], onDelete: Cascade)
-  account  Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  work    Work             @relation(fields: [workId], references: [id], onDelete: Cascade)
+  account Account          @relation(fields: [accountId], references: [id], onDelete: Cascade)
 
   @@unique([workId, accountId])
   @@index([platformCode])
@@ -115,20 +119,20 @@ model WorkPublishRecord {
 }
 
 model Proxy {
-  id         String      @id @default(cuid())
+  id         String    @id @default(cuid())
   name       String?
-  type       ProxyType   @default(HTTP)
+  type       ProxyType @default(HTTP)
   host       String
   port       Int
   username   String?
   password   String?
-  status     ProxyStatus @default(AVAILABLE)
+  isActive   Boolean   @default(true)
   location   String?
   lastUsedAt DateTime?
   expireAt   DateTime?
   remark     String?
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 
   accounts Account[]
 }
