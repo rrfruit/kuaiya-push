@@ -19,7 +19,8 @@ import { SharedModule } from "./shared/shared.module";
     }),
     ServeStaticModule.forRoot(
       {
-        rootPath: join(__dirname, "..", "..", "www"),
+        rootPath: join(process.cwd(), "www"),
+        serveRoot: "/web",
       },
       {
         rootPath: join(process.cwd(), "uploads"),
