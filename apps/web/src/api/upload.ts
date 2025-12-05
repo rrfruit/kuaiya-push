@@ -1,7 +1,6 @@
 import request from "@/lib/request";
 import { http } from "@/lib/request";
-import { UploadFile, FileType } from "@/types";
-import { type PaginatedResult } from "@repo/shared";
+import type { UploadFile, FileType, PaginatedResult } from "@/types";
 
 export interface GetUploadFilesParams {
   page?: number;
