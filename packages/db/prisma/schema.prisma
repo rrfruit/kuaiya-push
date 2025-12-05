@@ -13,7 +13,7 @@ datasource db {
 
 model Account {
   id             String    @id @default(cuid())
-  platformCode   String
+  platform   String
   proxyId        String?
   displayName    String
   coverUrl       String?
@@ -27,7 +27,7 @@ model Account {
   proxy   Proxy?              @relation(fields: [proxyId], references: [id], onDelete: SetNull)
   publishes WorkPublish[]
 
-  @@unique([platformCode, platformUserId])
+  @@unique([platform, platformUserId])
 }
 
 enum WorkType {
@@ -81,7 +81,7 @@ model WorkPublish {
 model WorkPublishPlatform {
   id           String        @id @default(cuid())
   publishId    String
-  platformCode String        @unique
+  platform String        @unique
   status       PublishStatus @default(PENDING)
   isSuccess    Boolean       @default(false)
   errorMessage String?
@@ -92,7 +92,7 @@ model WorkPublishPlatform {
 
   publish WorkPublish @relation(fields: [publishId], references: [id], onDelete: Cascade)
 
-  @@index([platformCode])
+  @@index([platform])
   @@index([status])
 }
 
