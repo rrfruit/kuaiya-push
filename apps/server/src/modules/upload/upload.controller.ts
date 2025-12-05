@@ -9,8 +9,6 @@ import {
   UploadedFile,
   ParseFilePipe,
   MaxFileSizeValidator,
-  FileTypeValidator,
-  BadRequestException,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
@@ -20,19 +18,8 @@ import { FileType } from "@repo/db";
 import { UploadService } from "./upload.service";
 
 // 100MB 最大文件大小
-const MAX_FILE_SIZE = 100 * 1024 * 1024;
+const MAX_FILE_SIZE = 1000 * 1024 * 1024;
 
-// 支持的文件类型
-const ALLOWED_MIME_TYPES = [
-  "image/jpeg",
-  "image/png",
-  "image/gif",
-  "image/webp",
-  "video/mp4",
-  "video/webm",
-  "video/quicktime",
-  "video/x-msvideo",
-];
 
 @Controller("upload")
 export class UploadController {
@@ -54,18 +41,6 @@ export class UploadController {
           cb(null, uniqueName);
         },
       }),
-      fileFilter: (req, file, cb) => {
-        if (ALLOWED_MIME_TYPES.includes(file.mimetype)) {
-          cb(null, true);
-        } else {
-          cb(
-            new BadRequestException(
-              `不支持的文件类型: ${file.mimetype}。支持的类型: ${ALLOWED_MIME_TYPES.join(", ")}`,
-            ),
-            false,
-          );
-        }
-      },
       limits: {
         fileSize: MAX_FILE_SIZE,
       },
@@ -75,12 +50,7 @@ export class UploadController {
     @UploadedFile(
       new ParseFilePipe({
         validators: [
-          new MaxFileSizeValidator({ maxSize: MAX_FILE_SIZE }),
-          new FileTypeValidator({
-            fileType: new RegExp(
-              `(${ALLOWED_MIME_TYPES.map((t) => t.replace("/", "\\/")).join("|")})`,
-            ),
-          }),
+          new MaxFileSizeValidator({ maxSize: MAX_FILE_SIZE })
         ],
       }),
     )
