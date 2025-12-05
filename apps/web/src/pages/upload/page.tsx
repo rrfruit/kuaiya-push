@@ -5,13 +5,15 @@ import { getColumns } from "./columns";
 import { DataTable } from "@/components/data-table";
 import { Loader2, Upload } from "lucide-react";
 import { FileTypeEnum } from "@/types/enum";
+import { FileType } from "@/types";
 import { Button } from "@repo/ui/components/ui/button";
 import { UploadDialog } from "./upload-dialog";
 import { PreviewDialog } from "./preview-dialog";
 import { ConfirmDialog } from "@/components/confirm-dialog";
 import { toast } from "sonner";
 import { UploadFile } from "@/types";
-import { PaginationState } from "@tanstack/react-table";
+import { PaginationState, ColumnFiltersState } from "@tanstack/react-table";
+import { useDebouncedValue } from "@/hooks/use-debounced-value";
 
 export default function UploadPage() {
   const queryClient = useQueryClient();
@@ -22,16 +24,29 @@ export default function UploadPage() {
     pageIndex: 0,
     pageSize: 10,
   });
+  // 服务端搜索和过滤状态
+  const [searchValue, setSearchValue] = useState("");
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  
+  // 防抖搜索值
+  const debouncedSearchValue = useDebouncedValue(searchValue, 300);
+  
+  // 从 columnFilters 中提取 type 过滤值
+  const typeFilter = columnFilters.find(f => f.id === "type");
+  const typeValue = typeFilter?.value as string[] | undefined;
+  const selectedType = typeValue && typeValue.length === 1 ? typeValue[0] as FileType : undefined;
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["uploadFiles", pagination.pageIndex, pagination.pageSize],
+    queryKey: ["uploadFiles", pagination.pageIndex, pagination.pageSize, debouncedSearchValue, selectedType],
     queryFn: () => getUploadFiles({
       page: pagination.pageIndex + 1,
       pageSize: pagination.pageSize,
+      filename: debouncedSearchValue || undefined,
+      type: selectedType,
     }),
   });
 
-  const files = data?.data?.data || [];
+  const files = data?.data?.list || [];
   const pageCount = data?.data?.totalPages || 0;
 
   const deleteMutation = useMutation({
@@ -113,6 +128,11 @@ export default function UploadPage() {
         pageCount={pageCount}
         pagination={pagination}
         onPaginationChange={setPagination}
+        manualFiltering
+        searchValue={searchValue}
+        onSearchChange={setSearchValue}
+        columnFilters={columnFilters}
+        onColumnFiltersChange={setColumnFilters}
       />
 
       <UploadDialog open={isUploadOpen} onOpenChange={setIsUploadOpen} />

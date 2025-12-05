@@ -1,8 +1,10 @@
 import { Injectable, NotFoundException, Logger } from "@nestjs/common";
 import { PrismaService } from "@/shared/prisma.service";
-import { FileType } from "@repo/db";
+import { FileType, UploadFile } from "@repo/db";
 import * as fs from "fs";
 import * as path from "path";
+import { FindAllUploadDto } from "./dto";
+import { type PaginatedResult } from "@repo/shared";
 
 export interface UploadedFileInfo {
   filename: string;
@@ -11,20 +13,6 @@ export interface UploadedFileInfo {
   mimeType: string;
   size: number;
   type: FileType;
-}
-
-export interface PaginationParams {
-  page?: number;
-  pageSize?: number;
-  type?: FileType;
-}
-
-export interface PaginatedResult<T> {
-  data: T[];
-  total: number;
-  page: number;
-  pageSize: number;
-  totalPages: number;
 }
 
 @Injectable()
@@ -60,12 +48,20 @@ export class UploadService {
     });
   }
 
-  async findAllPaginated(params: PaginationParams): Promise<PaginatedResult<any>> {
+  async findAllPaginated(params: FindAllUploadDto): Promise<PaginatedResult<UploadFile>> {
     const page = params.page || 1;
     const pageSize = params.pageSize || 10;
     const skip = (page - 1) * pageSize;
 
-    const where = params.type ? { type: params.type } : {};
+    const where: any = {};
+    if (params.type) {
+      where.type = params.type;
+    }
+    if (params.filename) {
+      where.filename = {
+        contains: params.filename,
+      };
+    }
 
     const [data, total] = await Promise.all([
       this.prisma.uploadFile.findMany({
@@ -78,7 +74,7 @@ export class UploadService {
     ]);
 
     return {
-      data,
+      list: data,
       total,
       page,
       pageSize,

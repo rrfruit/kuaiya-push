@@ -31,23 +31,20 @@ const publicUrls = ["/auth/profile"];
 
 instance.interceptors.response.use(
   async (response) => {
-    try {
-      if (response.data?.code !== 0) {
-        if (response.data.code === 4100) {
-          if (!publicUrls.includes(response.config.url!)) {
-            // gotoLogin()
-          }
-          return response;
-        } else {
-          toast.error(response.data.message);
+    if (response.data?.code !== 0) {
+      if (response.data.code === 4100) {
+        if (!publicUrls.includes(response.config.url!)) {
+          // gotoLogin()
         }
+        return response;
+      } else {
+        toast.error(response.data.message);
       }
-      return response;
-    } catch (error) {
-      return Promise.reject(error);
     }
+    return response;
   },
   (error: AxiosError) => {
+    toast.error((error.response?.data as any)?.message || "未知错误");
     return Promise.reject(error);
   },
 );

@@ -46,6 +46,12 @@ interface DataTableProps<TData, TValue> {
   pageCount?: number;
   pagination?: PaginationState;
   onPaginationChange?: (pagination: PaginationState) => void;
+  // 服务端搜索和过滤参数
+  manualFiltering?: boolean;
+  searchValue?: string;
+  onSearchChange?: (value: string) => void;
+  columnFilters?: ColumnFiltersState;
+  onColumnFiltersChange?: (filters: ColumnFiltersState) => void;
 }
 
 export function DataTable<TData, TValue>({
@@ -58,11 +64,16 @@ export function DataTable<TData, TValue>({
   pageCount,
   pagination,
   onPaginationChange,
+  manualFiltering,
+  searchValue,
+  onSearchChange,
+  columnFilters: externalColumnFilters,
+  onColumnFiltersChange: externalOnColumnFiltersChange,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({})
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+  const [internalColumnFilters, setInternalColumnFilters] = React.useState<ColumnFiltersState>(
     []
   )
   const [sorting, setSorting] = React.useState<SortingState>([])
@@ -70,6 +81,15 @@ export function DataTable<TData, TValue>({
     pageIndex: 0,
     pageSize: 10,
   })
+  
+  // 支持受控的 columnFilters
+  const columnFilters = externalColumnFilters ?? internalColumnFilters
+  const handleColumnFiltersChange = externalOnColumnFiltersChange
+    ? (updater: ColumnFiltersState | ((old: ColumnFiltersState) => ColumnFiltersState)) => {
+        const newFilters = typeof updater === 'function' ? updater(columnFilters) : updater
+        externalOnColumnFiltersChange(newFilters)
+      }
+    : setInternalColumnFilters
 
   const currentPagination = pagination ?? internalPagination
   const handlePaginationChange = onPaginationChange 
@@ -92,16 +112,17 @@ export function DataTable<TData, TValue>({
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
+    onColumnFiltersChange: handleColumnFiltersChange,
     onColumnVisibilityChange: setColumnVisibility,
     onPaginationChange: handlePaginationChange,
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
+    getFilteredRowModel: manualFiltering ? undefined : getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
+    getFacetedRowModel: manualFiltering ? undefined : getFacetedRowModel(),
+    getFacetedUniqueValues: manualFiltering ? undefined : getFacetedUniqueValues(),
     manualPagination,
+    manualFiltering,
     pageCount,
   })
 
@@ -112,6 +133,9 @@ export function DataTable<TData, TValue>({
         searchKey={searchKey} 
         searchPlaceholder={searchPlaceholder}
         filters={filters}
+        manualFiltering={manualFiltering}
+        searchValue={searchValue}
+        onSearchChange={onSearchChange}
       />
       <div className="rounded-md border">
         <Table>

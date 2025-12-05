@@ -16,6 +16,7 @@ import { extname } from "path";
 import { v4 as uuidv4 } from "uuid";
 import { FileType } from "@repo/db";
 import { UploadService } from "./upload.service";
+import { FindAllUploadDto } from "./dto";
 
 // 100MB 最大文件大小
 const MAX_FILE_SIZE = 1000 * 1024 * 1024;
@@ -71,22 +72,8 @@ export class UploadController {
   }
 
   @Get()
-  findAll(
-    @Query("type") type?: string,
-    @Query("page") page?: string,
-    @Query("pageSize") pageSize?: string,
-  ) {
-    const pageNum = page ? parseInt(page, 10) : 1;
-    const pageSizeNum = pageSize ? parseInt(pageSize, 10) : 10;
-    const fileType = type && Object.values(FileType).includes(type as FileType)
-      ? (type as FileType)
-      : undefined;
-
-    return this.uploadService.findAllPaginated({
-      page: pageNum,
-      pageSize: pageSizeNum,
-      type: fileType,
-    });
+  findAll(@Query() query: FindAllUploadDto) {
+    return this.uploadService.findAllPaginated(query);
   }
 
   @Get(":id")

@@ -1,19 +1,13 @@
 import request from "@/lib/request";
 import { http } from "@/lib/request";
 import { UploadFile, FileType } from "@/types";
-
-export interface PaginatedResult<T> {
-  data: T[];
-  total: number;
-  page: number;
-  pageSize: number;
-  totalPages: number;
-}
+import { type PaginatedResult } from "@repo/shared";
 
 export interface GetUploadFilesParams {
   page?: number;
   pageSize?: number;
   type?: FileType;
+  filename?: string;
 }
 
 export function getUploadFiles(params?: GetUploadFilesParams) {
@@ -22,6 +16,7 @@ export function getUploadFiles(params?: GetUploadFilesParams) {
       page: params.page,
       pageSize: params.pageSize,
       type: params.type,
+      filename: params.filename,
     } : undefined,
     method: "GET",
   });
