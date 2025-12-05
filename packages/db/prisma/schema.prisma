@@ -13,7 +13,7 @@ datasource db {
 
 model Account {
   id             String    @id @default(cuid())
-  platform   String
+  platform       String
   proxyId        String?
   displayName    String
   coverUrl       String?
@@ -24,8 +24,8 @@ model Account {
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
-  proxy   Proxy?              @relation(fields: [proxyId], references: [id], onDelete: SetNull)
-  publishes WorkPublish[]
+  proxy     Proxy?               @relation(fields: [proxyId], references: [id], onDelete: SetNull)
+  publishes WorkPublishAccount[]
 
   @@unique([platform, platformUserId])
 }
@@ -60,28 +60,24 @@ enum PublishStatus {
 }
 
 model WorkPublish {
-  id           String        @id @default(cuid())
-  workId       String
-  accountId    String
-  isImmediate  Boolean       @default(true)
-  status       PublishStatus @default(PENDING)
-  scheduledAt  DateTime?
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+  id          String        @id @default(cuid())
+  workId      String
+  isImmediate Boolean       @default(true)
+  status      PublishStatus @default(PENDING)
+  scheduledAt DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
 
-  platforms WorkPublishPlatform[]
+  accounts WorkPublishAccount[]
+  work     Work                 @relation(fields: [workId], references: [id], onDelete: Cascade)
 
-  work    Work    @relation(fields: [workId], references: [id], onDelete: Cascade)
-  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
-
-  @@unique([workId, accountId])
   @@index([status])
 }
 
-model WorkPublishPlatform {
+model WorkPublishAccount {
   id           String        @id @default(cuid())
   publishId    String
-  platform String        @unique
+  accountId    String
   status       PublishStatus @default(PENDING)
   isSuccess    Boolean       @default(false)
   errorMessage String?
@@ -91,8 +87,9 @@ model WorkPublishPlatform {
   updatedAt    DateTime      @updatedAt
 
   publish WorkPublish @relation(fields: [publishId], references: [id], onDelete: Cascade)
+  account Account     @relation(fields: [accountId], references: [id], onDelete: Cascade)
 
-  @@index([platform])
+  @@unique([publishId, accountId])
   @@index([status])
 }
 
