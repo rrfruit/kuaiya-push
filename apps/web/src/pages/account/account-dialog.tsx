@@ -2,8 +2,8 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
-import useRequest from "@/hooks/useRequest";
 
 import {
   Dialog,
@@ -47,10 +47,14 @@ interface AccountDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   account?: AccountWithRelations | null;
-  onSuccess?: () => void;
 }
 
-export function AccountDialog({ open, onOpenChange, account, onSuccess }: AccountDialogProps) {
+export function AccountDialog({
+  open,
+  onOpenChange,
+  account,
+}: AccountDialogProps) {
+  const queryClient = useQueryClient();
   const isEdit = !!account;
 
   const form = useForm<FormValues>({
@@ -74,40 +78,34 @@ export function AccountDialog({ open, onOpenChange, account, onSuccess }: Accoun
   }, [account, open, form]);
 
   // 创建账号
-  const { execute: executeCreate, isLoading: isCreating } = useRequest(
-    createAccount,
-    {
-      manual: true,
-      onSuccess: () => {
-        onSuccess?.();
-        onOpenChange(false);
-        form.reset();
-      },
-    }
-  );
+  const createMutation = useMutation({
+    mutationFn: createAccount,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      onOpenChange(false);
+      form.reset();
+    },
+  });
 
   // 更新账号
-  const { execute: executeUpdate, isLoading: isUpdating } = useRequest(
-    (values: FormValues) => updateAccount(account!.id, values),
-    {
-      manual: true,
-      onSuccess: () => {
-        onSuccess?.();
-        onOpenChange(false);
-        form.reset();
-      },
-    }
-  );
+  const updateMutation = useMutation({
+    mutationFn: (values: FormValues) => updateAccount(account!.id, values),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      onOpenChange(false);
+      form.reset();
+    },
+  });
 
   const onSubmit = (values: FormValues) => {
     if (isEdit) {
-      executeUpdate(values);
+      updateMutation.mutate(values);
     } else {
-      executeCreate(values);
+      createMutation.mutate(values);
     }
   };
 
-  const isPending = isCreating || isUpdating;
+  const isPending = createMutation.isPending || updateMutation.isPending;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -168,7 +166,10 @@ export function AccountDialog({ open, onOpenChange, account, onSuccess }: Accoun
                 <FormItem>
                   <FormLabel>封面图片 URL (可选)</FormLabel>
                   <FormControl>
-                    <Input placeholder="https://example.com/image.jpg" {...field} />
+                    <Input
+                      placeholder="https://example.com/image.jpg"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

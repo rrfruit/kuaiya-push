@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   getCoreRowModel,
   getFilteredRowModel,
@@ -19,33 +20,40 @@ import { Button } from "@repo/ui/components/ui/button";
 import { AccountDialog } from "./account-dialog";
 import { ConfirmDialog } from "@/components/confirm-dialog";
 import { toast } from "sonner";
-import useRequest from "@/hooks/useRequest";
 
 export default function AccountPage() {
+  const queryClient = useQueryClient();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [editingAccount, setEditingAccount] = useState<AccountWithRelations | null>(null);
-  const [deleteAccountData, setDeleteAccountData] = useState<AccountWithRelations | null>(null);
+  const [editingAccount, setEditingAccount] =
+    useState<AccountWithRelations | null>(null);
+  const [deleteAccountData, setDeleteAccountData] =
+    useState<AccountWithRelations | null>(null);
 
   // 获取账号列表
-  const { data, isLoading, isError, error, refresh } = useRequest(getAccounts);
-
-  const accounts = data || [];
+  const {
+    data: accounts = [],
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["accounts"],
+    queryFn: () => getAccounts(),
+  });
 
   // 删除操作
-  const { execute: executeDelete, isLoading: isDeleting } = useRequest(
-    deleteAccount,
-    {
-      manual: true,
-      onSuccess: () => {
-        toast.success("账号已删除");
-        setDeleteAccountData(null);
-        refresh();
-      },
-      onError: (err) => {
-        toast.error("删除失败: " + (err?.message || "未知错误"));
-      },
+  const deleteMutation = useMutation({
+    mutationFn: deleteAccount,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      toast.success("账号已删除");
+      setDeleteAccountData(null);
     },
-  );
+    onError: (err) => {
+      toast.error(
+        "删除失败: " + (err instanceof Error ? err.message : "未知错误"),
+      );
+    },
+  });
 
   const filters = [
     {
@@ -77,7 +85,7 @@ export default function AccountPage() {
     onDelete: handleDelete,
   });
 
-  // 客户端表格（数据已全部加载）
+  // 客户端表格
   const table = useReactTable({
     data: accounts,
     columns,
@@ -100,7 +108,7 @@ export default function AccountPage() {
       <div className="flex h-full flex-col items-center justify-center p-8 text-destructive">
         <p>加载账号列表失败</p>
         <p className="text-sm text-muted-foreground">
-          {error?.message || "未知错误"}
+          {error instanceof Error ? error.message : "未知错误"}
         </p>
       </div>
     );
@@ -136,7 +144,6 @@ export default function AccountPage() {
         open={isDialogOpen}
         onOpenChange={setIsDialogOpen}
         account={editingAccount}
-        onSuccess={refresh}
       />
 
       <ConfirmDialog
@@ -146,8 +153,10 @@ export default function AccountPage() {
         desc={`您确定要删除账号 "${deleteAccountData?.displayName}" 吗？此操作无法撤销。`}
         confirmText="删除"
         destructive
-        handleConfirm={() => deleteAccountData && executeDelete(deleteAccountData.id)}
-        isLoading={isDeleting}
+        handleConfirm={() =>
+          deleteAccountData && deleteMutation.mutate(deleteAccountData.id)
+        }
+        isLoading={deleteMutation.isPending}
       />
     </div>
   );

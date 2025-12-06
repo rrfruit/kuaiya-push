@@ -62,7 +62,11 @@ export const getColumns = ({
     ),
     cell: ({ row }) => {
       const date = new Date(row.getValue("updatedAt"));
-      return <div className="text-muted-foreground text-xs">{date.toLocaleString()}</div>;
+      return (
+        <div className="text-muted-foreground text-xs">
+          {date.toLocaleString()}
+        </div>
+      );
     },
   },
   {
@@ -89,7 +93,7 @@ export const getColumns = ({
             <DropdownMenuItem onClick={() => onEdit(account)}>
               Edit Account
             </DropdownMenuItem>
-            <DropdownMenuItem 
+            <DropdownMenuItem
               className="text-destructive"
               onClick={() => onDelete(account)}
             >

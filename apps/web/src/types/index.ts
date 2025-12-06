@@ -8,5 +8,3 @@ export type Platform = {
   name: string;
   code: string;
 };
-
-

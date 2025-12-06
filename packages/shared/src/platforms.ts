@@ -31,7 +31,8 @@ export const kuaishou: Platform = {
 export const shipinhao: Platform = {
   name: "视频号",
   code: "shipinhao",
-  logoUrl: "https://res.wx.qq.com/t/wx_fed/finder/helper/finder-helper-web/res/favicon-v2.ico",
+  logoUrl:
+    "https://res.wx.qq.com/t/wx_fed/finder/helper/finder-helper-web/res/favicon-v2.ico",
 };
 
 export const platforms: Platform[] = [
@@ -43,4 +44,3 @@ export const platforms: Platform[] = [
 ];
 
 export default platforms;
-

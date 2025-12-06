@@ -34,7 +34,8 @@ export function DataTableToolbar<TData>({
   filters = [],
 }: DataTableToolbarProps<TData>) {
   // 是否为受控模式（服务端搜索）
-  const isControlled = searchValue !== undefined && onSearchChange !== undefined;
+  const isControlled =
+    searchValue !== undefined && onSearchChange !== undefined;
 
   const isFiltered =
     table.getState().columnFilters.length > 0 ||
@@ -64,7 +65,9 @@ export function DataTableToolbar<TData>({
           // 客户端搜索：指定列
           <Input
             placeholder={searchPlaceholder}
-            value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ""}
+            value={
+              (table.getColumn(searchKey)?.getFilterValue() as string) ?? ""
+            }
             onChange={(e) =>
               table.getColumn(searchKey)?.setFilterValue(e.target.value)
             }

@@ -13,6 +13,7 @@ export default [
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
       "react-refresh/only-export-components": "off",
+      'react-hooks/incompatible-library': 'off',
     },
   },
 ];

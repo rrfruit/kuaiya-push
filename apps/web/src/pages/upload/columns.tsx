@@ -40,13 +40,19 @@ export const getColumns = ({
       const file = row.original;
       const isImage = file.type === FileTypeEnum.IMAGE;
       return (
-        <div className="flex items-center gap-2 cursor-pointer hover:text-blue-500" onClick={() => onPreview(file)}>
+        <div
+          className="flex items-center gap-2 cursor-pointer hover:text-blue-500"
+          onClick={() => onPreview(file)}
+        >
           {isImage ? (
             <Image className="h-4 w-4 text-blue-500" />
           ) : (
             <Video className="h-4 w-4 text-purple-500" />
           )}
-          <span className="max-w-[200px] truncate font-medium" title={file.filename}>
+          <span
+            className="max-w-[200px] truncate font-medium"
+            title={file.filename}
+          >
             {file.filename}
           </span>
         </div>
@@ -77,7 +83,9 @@ export const getColumns = ({
     ),
     cell: ({ row }) => {
       const size = row.getValue("size") as number;
-      return <span className="text-muted-foreground">{formatFileSize(size)}</span>;
+      return (
+        <span className="text-muted-foreground">{formatFileSize(size)}</span>
+      );
     },
   },
   {

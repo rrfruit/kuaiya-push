@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   getCoreRowModel,
   useReactTable,
@@ -21,31 +22,33 @@ import { UploadDialog } from "./upload-dialog";
 import { PreviewDialog } from "./preview-dialog";
 import { ConfirmDialog } from "@/components/confirm-dialog";
 import { toast } from "sonner";
-import useRequest from "@/hooks/useRequest";
 
 export default function UploadPage() {
+  const queryClient = useQueryClient();
   const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [previewFile, setPreviewFile] = useState<UploadFile | null>(null);
   const [deleteFileData, setDeleteFileData] = useState<UploadFile | null>(null);
 
   // 获取数据
-  const { data, isLoading, isError, error, refresh } = useRequest(getUploadFiles);
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["uploadFiles"],
+    queryFn: getUploadFiles,
+  });
 
   // 删除操作
-  const { execute: executeDelete, isLoading: isDeleting } = useRequest(
-    deleteUploadFile,
-    {
-      manual: true,
-      onSuccess: () => {
-        toast.success("文件已删除");
-        setDeleteFileData(null);
-        refresh();
-      },
-      onError: (err) => {
-        toast.error("删除失败: " + (err?.message || "未知错误"));
-      },
+  const deleteMutation = useMutation({
+    mutationFn: deleteUploadFile,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["uploadFiles"] });
+      toast.success("文件已删除");
+      setDeleteFileData(null);
     },
-  );
+    onError: (err) => {
+      toast.error(
+        "删除失败: " + (err instanceof Error ? err.message : "未知错误"),
+      );
+    },
+  });
 
   const handlePreview = (file: UploadFile) => setPreviewFile(file);
   const handleDelete = (file: UploadFile) => setDeleteFileData(file);
@@ -55,15 +58,13 @@ export default function UploadPage() {
     onDelete: handleDelete,
   });
 
-  const files = data?.list ?? [];
-
   const table = useReactTable({
-    data: files,
+    data: data ?? [],
     columns,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel()
+    getSortedRowModel: getSortedRowModel(),
   });
 
   const filters = [
@@ -94,22 +95,18 @@ export default function UploadPage() {
         <DataTableToolbar
           table={table}
           searchPlaceholder="搜索文件名..."
-          filters={filters} 
+          filters={filters}
         />
         <DataTable
           table={table}
           isLoading={isLoading}
           isError={isError}
-          errorMessage={error?.message}
+          errorMessage={error instanceof Error ? error.message : undefined}
         />
         <DataTablePagination table={table} />
       </div>
 
-      <UploadDialog
-        open={isUploadOpen}
-        onOpenChange={setIsUploadOpen}
-        onSuccess={refresh}
-      />
+      <UploadDialog open={isUploadOpen} onOpenChange={setIsUploadOpen} />
 
       <PreviewDialog
         open={!!previewFile}
@@ -124,8 +121,10 @@ export default function UploadPage() {
         desc={`您确定要删除文件 "${deleteFileData?.filename}" 吗？此操作无法撤销。`}
         confirmText="删除"
         destructive
-        handleConfirm={() => deleteFileData && executeDelete(deleteFileData.id)}
-        isLoading={isDeleting}
+        handleConfirm={() =>
+          deleteFileData && deleteMutation.mutate(deleteFileData.id)
+        }
+        isLoading={deleteMutation.isPending}
       />
     </div>
   );

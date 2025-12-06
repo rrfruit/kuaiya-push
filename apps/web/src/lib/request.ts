@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { useUserStore } from "@/stores/useUserStore";
 
 const instance = axios.create({
-  baseURL: import.meta.env.VITE_APP_BASE_URL + '/api',
+  baseURL: import.meta.env.VITE_APP_BASE_URL + "/api",
   timeout: 600_000,
   headers: {
     "Content-Type": "application/json",
@@ -30,9 +30,9 @@ instance.interceptors.response.use(
   async (response) => {
     return response;
   },
-  (error: AxiosError) => {  
+  (error: AxiosError) => {
     toast.error(error.message, {
-      description: (error.response?.data as any)?.message
+      description: (error.response?.data as any)?.message,
     });
     return Promise.reject(error);
   },

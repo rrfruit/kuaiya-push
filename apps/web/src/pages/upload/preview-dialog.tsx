@@ -13,7 +13,11 @@ interface PreviewDialogProps {
   file: UploadFile | null;
 }
 
-export function PreviewDialog({ open, onOpenChange, file }: PreviewDialogProps) {
+export function PreviewDialog({
+  open,
+  onOpenChange,
+  file,
+}: PreviewDialogProps) {
   if (!file) return null;
 
   const fileUrl = `${import.meta.env.VITE_APP_BASE_URL}${file.path}`;

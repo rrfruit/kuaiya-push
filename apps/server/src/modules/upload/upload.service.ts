@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException, Logger, BadRequestException } from "@nestjs/common";
+import {
+  Injectable,
+  NotFoundException,
+  Logger,
+  BadRequestException,
+} from "@nestjs/common";
 import { PrismaService } from "@/shared/prisma.service";
 import { FileType, UploadFile } from "@repo/db";
 import * as fs from "fs";
@@ -48,7 +53,9 @@ export class UploadService {
     });
   }
 
-  async findAllPaginated(params: FindAllUploadDto): Promise<PaginatedResult<UploadFile>> {
+  async findAllPaginated(
+    params: FindAllUploadDto,
+  ): Promise<PaginatedResult<UploadFile>> {
     const page = params.page || 1;
     const pageSize = params.pageSize || 10;
     const skip = (page - 1) * pageSize;

@@ -21,7 +21,6 @@ import { FindAllUploadDto } from "./dto";
 // 100MB 最大文件大小
 const MAX_FILE_SIZE = 1000 * 1024 * 1024;
 
-
 @Controller("upload")
 export class UploadController {
   constructor(private readonly uploadService: UploadService) {}
@@ -50,9 +49,7 @@ export class UploadController {
   async uploadFile(
     @UploadedFile(
       new ParseFilePipe({
-        validators: [
-          new MaxFileSizeValidator({ maxSize: MAX_FILE_SIZE })
-        ],
+        validators: [new MaxFileSizeValidator({ maxSize: MAX_FILE_SIZE })],
       }),
     )
     file: Express.Multer.File,
@@ -72,8 +69,8 @@ export class UploadController {
   }
 
   @Get()
-  findAll(@Query() query: FindAllUploadDto) {
-    return this.uploadService.findAllPaginated(query);
+  findAll() {
+    return this.uploadService.findAll();
   }
 
   @Get(":id")
