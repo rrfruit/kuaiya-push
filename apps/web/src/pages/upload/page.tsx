@@ -46,8 +46,8 @@ export default function UploadPage() {
     }),
   });
 
-  const files = data?.data?.list || [];
-  const pageCount = data?.data?.totalPages || 0;
+  const files = data?.list || [];
+  const pageCount = data?.totalPages || 0;
 
   const deleteMutation = useMutation({
     mutationFn: deleteUploadFile,

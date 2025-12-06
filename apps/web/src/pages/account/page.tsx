@@ -21,7 +21,7 @@ export default function AccountPage() {
     queryFn: () => getAccounts(),
   });
 
-  const accounts = (data?.data || []) as AccountWithRelations[];
+  const accounts = data || [];
 
   const deleteMutation = useMutation({
     mutationFn: deleteAccount,

@@ -2,7 +2,6 @@ import axios, { AxiosError } from "axios";
 import type { AxiosRequestConfig } from "axios";
 import { toast } from "sonner";
 import { useUserStore } from "@/stores/useUserStore";
-import { ApiResponse } from "@/types";
 
 const instance = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_URL + '/api',
@@ -52,10 +51,10 @@ instance.interceptors.response.use(
 const request = async <T = any>(
   url: string,
   config?: AxiosRequestConfig,
-): Promise<ApiResponse<T>> => {
+): Promise<T> => {
   return new Promise((resolve, reject) => {
     instance(url, config)
-      .then((res) => resolve(res.data as ApiResponse<T>))
+      .then((res) => resolve(res.data as T))
       .catch(reject);
   });
 };

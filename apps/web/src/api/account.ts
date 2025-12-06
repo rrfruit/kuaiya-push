@@ -1,5 +1,5 @@
 import request from "@/lib/request";
-import { Account } from "@repo/db/types";
+import { AccountWithRelations, Account } from "@/types";
 
 export interface CreateAccountDto {
   platform: string;
@@ -12,7 +12,7 @@ export interface CreateAccountDto {
 export type UpdateAccountDto = Partial<CreateAccountDto>;
 
 export function getAccounts(platform?: string) {
-  return request<Account[]>("/account", {
+  return request<AccountWithRelations[]>("/account", {
     params: { platform },
     method: "GET",
   });

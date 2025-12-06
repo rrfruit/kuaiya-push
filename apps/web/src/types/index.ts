@@ -9,10 +9,4 @@ export type Platform = {
   code: string;
 };
 
-export type ApiResponse<T> = {
-  code: number;
-  message: string;
-  data: T;
-};
-
 
