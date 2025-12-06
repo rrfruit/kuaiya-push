@@ -8,7 +8,7 @@ import {
   getFilteredRowModel,
 } from "@tanstack/react-table";
 import { getUploadFiles, deleteUploadFile } from "@/api/upload";
-import { getColumns } from "./columns";
+import { getColumns } from "./components/columns";
 import {
   DataTable,
   DataTablePagination,
@@ -18,12 +18,12 @@ import { Upload } from "lucide-react";
 import { FileTypeEnum } from "@/types/enum";
 import { UploadFile } from "@/types";
 import { Button } from "@repo/ui/components/ui/button";
-import { UploadDialog } from "./upload-dialog";
-import { PreviewDialog } from "./preview-dialog";
+import { UploadDialog } from "./components/upload-dialog";
+import { PreviewDialog } from "./components/preview-dialog";
 import { ConfirmDialog } from "@/components/confirm-dialog";
 import { toast } from "sonner";
 
-import { DataTableBulkActions } from "./bulk-actions";
+import { DataTableBulkActions } from "./components/bulk-actions";
 
 const QUERY_KEY = "uploadFiles";
 
