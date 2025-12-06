@@ -50,7 +50,7 @@ export const data = {
     },
     {
       title: "代理",
-      url: "/proxy",
+      url: "/proxies",
       icon: GlobeIcon,
     },
     {

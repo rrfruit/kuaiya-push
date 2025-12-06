@@ -10,6 +10,7 @@ import { BrowserModule } from "./modules/browser/browser.module";
 import { SocketModule } from "./modules/socket/socket.module";
 import { UploadModule } from "./modules/upload/upload.module";
 import { WorkModule } from "./modules/work/work.module";
+import { ProxyModule } from "./modules/proxy/proxy.module";
 import { SharedModule } from "./shared/shared.module";
 
 @Module({
@@ -34,6 +35,7 @@ import { SharedModule } from "./shared/shared.module";
     AccountModule,
     UploadModule,
     WorkModule,
+    ProxyModule,
   ],
   controllers: [AppController],
   providers: [AppService],

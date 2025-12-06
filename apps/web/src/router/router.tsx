@@ -5,6 +5,7 @@ import ErrorPage from "@/pages/error/page";
 import AccountPage from "@/pages/account/page";
 import UploadPage from "@/pages/upload/page";
 import WorkPage from "@/pages/work/page";
+import ProxyPage from "@/pages/proxy/page";
 
 export const router = createBrowserRouter([
   {
@@ -27,6 +28,10 @@ export const router = createBrowserRouter([
       {
         path: "works",
         element: <WorkPage />,
+      },
+      {
+        path: "proxies",
+        element: <ProxyPage />,
       },
     ],
   },
