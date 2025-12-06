@@ -40,11 +40,11 @@ model Work {
   id          String   @id @default(cuid())
   type        WorkType @default(VIDEO)
   title       String
-  description String
-  mediaUrl    String?
-  coverUrl    String?
+  description String?
   content     String?
+  coverUrl    String?
   imgs        String?
+  mediaUrl    String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 

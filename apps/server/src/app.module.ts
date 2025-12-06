@@ -9,6 +9,7 @@ import { AccountModule } from "./modules/account/account.module";
 import { BrowserModule } from "./modules/browser/browser.module";
 import { SocketModule } from "./modules/socket/socket.module";
 import { UploadModule } from "./modules/upload/upload.module";
+import { WorkModule } from "./modules/work/work.module";
 import { SharedModule } from "./shared/shared.module";
 
 @Module({
@@ -32,6 +33,7 @@ import { SharedModule } from "./shared/shared.module";
     SocketModule,
     AccountModule,
     UploadModule,
+    WorkModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -4,6 +4,7 @@ import DashboardPage from "@/pages/dashboard/page";
 import ErrorPage from "@/pages/error/page";
 import AccountPage from "@/pages/account/page";
 import UploadPage from "@/pages/upload/page";
+import WorkPage from "@/pages/work/page";
 
 export const router = createBrowserRouter([
   {
@@ -22,6 +23,10 @@ export const router = createBrowserRouter([
       {
         path: "upload",
         element: <UploadPage />,
+      },
+      {
+        path: "works",
+        element: <WorkPage />,
       },
     ],
   },
