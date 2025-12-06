@@ -40,7 +40,11 @@ function useRequest<TData, TParams extends any[]>(
     onBefore?.(args);
 
     try {
+      const start = performance.now();
       const res = await serviceRef.current(...args);
+      if (performance.now() - start < 1000) {
+        await new Promise(resolve => setTimeout(resolve, 600 - (performance.now() - start)));
+      }
 
       setData(res);
       setError(undefined);

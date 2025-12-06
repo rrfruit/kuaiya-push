@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Loader2, Upload, X, Image, Video } from "lucide-react";
 import { toast } from "sonner";
+import useRequest from "@/hooks/useRequest";
 
 import {
   Dialog,
@@ -17,6 +17,7 @@ import { cn } from "@/lib/utils";
 interface UploadDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onSuccess?: () => void;
 }
 
 const ALLOWED_TYPES = [
@@ -32,29 +33,31 @@ const ALLOWED_TYPES = [
 
 const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
 
-export function UploadDialog({ open, onOpenChange }: UploadDialogProps) {
-  const queryClient = useQueryClient();
+export function UploadDialog({ open, onOpenChange, onSuccess }: UploadDialogProps) {
   const [dragActive, setDragActive] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-
-  const uploadMutation = useMutation({
-    mutationFn: uploadFile,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["uploadFiles"] });
-      toast.success("文件上传成功");
-      handleClose();
-    },
-    onError: (error) => {
-      toast.error("上传失败: " + (error instanceof Error ? error.message : "未知错误"));
-    },
-  });
 
   const handleClose = () => {
     setSelectedFile(null);
     setPreviewUrl(null);
     onOpenChange(false);
   };
+
+  const { execute: executeUpload, isLoading: isUploading } = useRequest(
+    uploadFile,
+    {
+      manual: true,
+      onSuccess: () => {
+        toast.success("文件上传成功");
+        onSuccess?.();
+        handleClose();
+      },
+      onError: (error) => {
+        toast.error("上传失败: " + (error?.message || "未知错误"));
+      },
+    }
+  );
 
   const validateFile = (file: File): boolean => {
     if (!ALLOWED_TYPES.includes(file.type)) {
@@ -114,7 +117,7 @@ export function UploadDialog({ open, onOpenChange }: UploadDialogProps) {
 
   const handleUpload = () => {
     if (selectedFile) {
-      uploadMutation.mutate(selectedFile);
+      executeUpload(selectedFile);
     }
   };
 
@@ -212,8 +215,8 @@ export function UploadDialog({ open, onOpenChange }: UploadDialogProps) {
                 <Button variant="outline" onClick={handleClose}>
                   取消
                 </Button>
-                <Button onClick={handleUpload} disabled={uploadMutation.isPending}>
-                  {uploadMutation.isPending && (
+                <Button onClick={handleUpload} disabled={isUploading}>
+                  {isUploading && (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   )}
                   上传

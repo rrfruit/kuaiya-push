@@ -55,9 +55,6 @@ export class UploadService {
 
     const where: any = {};
     if (params.type) {
-      throw new BadRequestException("type is not supported", {
-        cause: new Error("type is not supported"),
-      });
       where.type = params.type;
     }
     if (params.filename) {

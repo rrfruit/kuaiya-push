@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState, useRef } from "react";
 import { getAccounts, deleteAccount } from "@/api/account";
 import { getColumns } from "./columns";
 import { AccountWithRelations } from "@/types";
@@ -9,31 +8,39 @@ import { Button } from "@repo/ui/components/ui/button";
 import { AccountDialog } from "./account-dialog";
 import { ConfirmDialog } from "@/components/confirm-dialog";
 import { toast } from "sonner";
+import useRequest from "@/hooks/useRequest";
 
 export default function AccountPage() {
-  const queryClient = useQueryClient();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingAccount, setEditingAccount] = useState<AccountWithRelations | null>(null);
   const [deleteAccountData, setDeleteAccountData] = useState<AccountWithRelations | null>(null);
 
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["accounts"],
-    queryFn: () => getAccounts(),
-  });
+  // 刷新函数引用
+  const refreshRef = useRef<(() => void) | null>(null);
+
+  // 获取账号列表
+  const { data, isLoading, isError, error, refresh } = useRequest(getAccounts);
+
+  // 存储刷新函数
+  refreshRef.current = refresh;
 
   const accounts = data || [];
 
-  const deleteMutation = useMutation({
-    mutationFn: deleteAccount,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["accounts"] });
-      toast.success("账号已删除");
-      setDeleteAccountData(null);
-    },
-    onError: (error) => {
-      toast.error("删除失败: " + (error instanceof Error ? error.message : "未知错误"));
-    },
-  });
+  // 删除操作
+  const { execute: executeDelete, isLoading: isDeleting } = useRequest(
+    deleteAccount,
+    {
+      manual: true,
+      onSuccess: () => {
+        toast.success("账号已删除");
+        setDeleteAccountData(null);
+        refresh();
+      },
+      onError: (error) => {
+        toast.error("删除失败: " + (error?.message || "未知错误"));
+      },
+    }
+  );
 
   // Define filters for the DataTable
   const filters = [
@@ -78,7 +85,7 @@ export default function AccountPage() {
     return (
       <div className="flex h-full flex-col items-center justify-center p-8 text-destructive">
         <p>Error loading accounts</p>
-        <p className="text-sm text-muted-foreground">{error instanceof Error ? error.message : "Unknown error"}</p>
+        <p className="text-sm text-muted-foreground">{error?.message || "Unknown error"}</p>
       </div>
     );
   }
@@ -108,7 +115,8 @@ export default function AccountPage() {
       <AccountDialog 
         open={isDialogOpen} 
         onOpenChange={setIsDialogOpen} 
-        account={editingAccount} 
+        account={editingAccount}
+        onSuccess={refresh}
       />
 
       <ConfirmDialog
@@ -118,8 +126,8 @@ export default function AccountPage() {
         desc={`您确定要删除账号 "${deleteAccountData?.displayName}" 吗？此操作无法撤销。`}
         confirmText="删除"
         destructive
-        handleConfirm={() => deleteAccountData && deleteMutation.mutate(deleteAccountData.id)}
-        isLoading={deleteMutation.isPending}
+        handleConfirm={() => deleteAccountData && executeDelete(deleteAccountData.id)}
+        isLoading={isDeleting}
       />
     </div>
   );
