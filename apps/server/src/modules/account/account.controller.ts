@@ -42,4 +42,9 @@ export class AccountController {
   remove(@Param("id") id: string) {
     return this.accountService.remove(id);
   }
+
+  @Post("batch-delete")
+  removeMany(@Body() body: { ids: string[] }) {
+    return this.accountService.removeMany(body.ids);
+  }
 }

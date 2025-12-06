@@ -38,4 +38,9 @@ export class ProxyController {
   remove(@Param("id") id: string) {
     return this.proxyService.remove(id);
   }
+
+  @Post("batch-delete")
+  removeMany(@Body() body: { ids: string[] }) {
+    return this.proxyService.removeMany(body.ids);
+  }
 }

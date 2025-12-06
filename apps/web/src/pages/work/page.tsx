@@ -19,6 +19,7 @@ import { WorkDialog } from "./components/work-dialog";
 import { ConfirmDialog } from "@/components/confirm-dialog";
 import { toast } from "sonner";
 import { WorksProvider, useWorks } from "./components/works-provider";
+import { DataTableBulkActions } from "./components/bulk-actions";
 
 const QUERY_KEY = "works";
 
@@ -102,6 +103,7 @@ function WorkContent() {
           errorMessage={error instanceof Error ? error.message : undefined}
         />
         <DataTablePagination table={table} />
+        <DataTableBulkActions table={table} />
       </div>
 
       <WorkDialog

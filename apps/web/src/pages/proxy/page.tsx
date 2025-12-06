@@ -19,6 +19,7 @@ import { ProxyDialog } from "./components/proxy-dialog";
 import { ConfirmDialog } from "@/components/confirm-dialog";
 import { toast } from "sonner";
 import { ProxiesProvider, useProxies } from "./components/proxies-provider";
+import { DataTableBulkActions } from "./components/bulk-actions";
 
 const QUERY_KEY = "proxies";
 
@@ -110,6 +111,7 @@ function ProxyContent() {
           errorMessage={error instanceof Error ? error.message : undefined}
         />
         <DataTablePagination table={table} />
+        <DataTableBulkActions table={table} />
       </div>
 
       <ProxyDialog

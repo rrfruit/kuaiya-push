@@ -68,4 +68,11 @@ export class AccountService {
       where: { id },
     });
   }
+
+  // 批量删除
+  async removeMany(ids: string[]) {
+    return this.prisma.account.deleteMany({
+      where: { id: { in: ids } },
+    });
+  }
 }

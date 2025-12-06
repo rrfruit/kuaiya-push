@@ -46,4 +46,11 @@ export class WorkService {
       where: { id },
     });
   }
+
+  // 批量删除
+  async removeMany(ids: string[]) {
+    return this.prisma.work.deleteMany({
+      where: { id: { in: ids } },
+    });
+  }
 }

@@ -44,3 +44,10 @@ export function deleteWork(id: string) {
     method: "DELETE",
   });
 }
+
+export function deleteWorks(ids: string[]) {
+  return request<{ count: number }>("/work/batch-delete", {
+    method: "POST",
+    data: { ids },
+  });
+}

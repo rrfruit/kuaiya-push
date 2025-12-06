@@ -6,6 +6,7 @@ import AccountPage from "@/pages/account/page";
 import UploadPage from "@/pages/upload/page";
 import WorkPage from "@/pages/work/page";
 import ProxyPage from "@/pages/proxy/page";
+import PlatformPage from "@/pages/platform/page";
 
 export const router = createBrowserRouter([
   {
@@ -32,6 +33,10 @@ export const router = createBrowserRouter([
       {
         path: "proxies",
         element: <ProxyPage />,
+      },
+      {
+        path: "platforms",
+        element: <PlatformPage />,
       },
     ],
   },

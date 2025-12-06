@@ -2,6 +2,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { AccountWithRelations } from "@/types";
 import { DataTableColumnHeader } from "@/components/data-table/column-header";
 import { Button } from "@repo/ui/components/ui/button";
+import { Checkbox } from "@repo/ui/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -56,6 +57,30 @@ function DataTableRowActions({ row }: { row: { original: AccountWithRelations } 
 }
 
 export const columns: ColumnDef<AccountWithRelations>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="全选"
+        className="translate-y-0.5"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="选择行"
+        className="translate-y-0.5"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
   {
     accessorKey: "displayName",
     header: ({ column }) => (

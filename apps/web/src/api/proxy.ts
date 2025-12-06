@@ -53,3 +53,10 @@ export function deleteProxy(id: string) {
     method: "DELETE",
   });
 }
+
+export function deleteProxies(ids: string[]) {
+  return request<{ count: number }>("/proxy/batch-delete", {
+    method: "POST",
+    data: { ids },
+  });
+}

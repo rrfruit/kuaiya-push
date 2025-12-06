@@ -38,4 +38,9 @@ export class WorkController {
   remove(@Param("id") id: string) {
     return this.workService.remove(id);
   }
+
+  @Post("batch-delete")
+  removeMany(@Body() body: { ids: string[] }) {
+    return this.workService.removeMany(body.ids);
+  }
 }

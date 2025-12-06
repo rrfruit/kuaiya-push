@@ -77,6 +77,13 @@ export class ProxyService {
     });
   }
 
+  // 批量删除
+  async removeMany(ids: string[]) {
+    return this.prisma.proxy.deleteMany({
+      where: { id: { in: ids } },
+    });
+  }
+
   // 更新最后使用时间
   async updateLastUsedAt(id: string) {
     return this.prisma.proxy.update({

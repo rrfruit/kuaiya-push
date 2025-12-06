@@ -42,7 +42,7 @@ const formSchema = z.object({
   name: z.string().optional(),
   type: z.enum(["HTTP", "HTTPS", "SOCKS5"] as const),
   host: z.string().min(1, "主机地址不能为空"),
-  port: z.coerce.number().min(1, "端口号无效").max(65535, "端口号无效"),
+  port: z.number().min(1, "端口号无效").max(65535, "端口号无效"),
   username: z.string().optional(),
   password: z.string().optional(),
   isActive: z.boolean(),

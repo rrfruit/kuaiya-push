@@ -55,7 +55,7 @@ export const data = {
     },
     {
       title: "平台",
-      url: "/platform",
+      url: "/platforms",
       icon: ServerIcon,
     },
     {

@@ -19,6 +19,7 @@ import { AccountDialog } from "./components/account-dialog";
 import { ConfirmDialog } from "@/components/confirm-dialog";
 import { toast } from "sonner";
 import { AccountsProvider, useAccounts } from "./components/accounts-provider";
+import { DataTableBulkActions } from "./components/bulk-actions";
 
 function AccountContent() {
   const queryClient = useQueryClient();
@@ -101,6 +102,7 @@ function AccountContent() {
           errorMessage={error instanceof Error ? error.message : undefined}
         />
         <DataTablePagination table={table} />
+        <DataTableBulkActions table={table} />
       </div>
 
       <AccountDialog

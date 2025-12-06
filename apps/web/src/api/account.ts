@@ -43,3 +43,10 @@ export function deleteAccount(id: string) {
     method: "DELETE",
   });
 }
+
+export function deleteAccounts(ids: string[]) {
+  return request<{ count: number }>("/account/batch-delete", {
+    method: "POST",
+    data: { ids },
+  });
+}
