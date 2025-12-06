@@ -1,8 +1,19 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
+import {
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
 import { getAccounts, deleteAccount } from "@/api/account";
 import { getColumns } from "./columns";
 import { AccountWithRelations } from "@/types";
-import { DataTable } from "@/components/data-table";
+import {
+  DataTable,
+  DataTablePagination,
+  DataTableToolbar,
+} from "@/components/data-table";
 import { Loader2, PlusIcon } from "lucide-react";
 import { Button } from "@repo/ui/components/ui/button";
 import { AccountDialog } from "./account-dialog";
@@ -15,14 +26,8 @@ export default function AccountPage() {
   const [editingAccount, setEditingAccount] = useState<AccountWithRelations | null>(null);
   const [deleteAccountData, setDeleteAccountData] = useState<AccountWithRelations | null>(null);
 
-  // 刷新函数引用
-  const refreshRef = useRef<(() => void) | null>(null);
-
   // 获取账号列表
   const { data, isLoading, isError, error, refresh } = useRequest(getAccounts);
-
-  // 存储刷新函数
-  refreshRef.current = refresh;
 
   const accounts = data || [];
 
@@ -36,20 +41,19 @@ export default function AccountPage() {
         setDeleteAccountData(null);
         refresh();
       },
-      onError: (error) => {
-        toast.error("删除失败: " + (error?.message || "未知错误"));
+      onError: (err) => {
+        toast.error("删除失败: " + (err?.message || "未知错误"));
       },
-    }
+    },
   );
 
-  // Define filters for the DataTable
   const filters = [
     {
       columnId: "isLoggedIn",
-      title: "isLoggedIn",
+      title: "登录状态",
       options: [
-        { label: "是", value: '1' },
-        { label: "否", value: '0' },
+        { label: "是", value: "1" },
+        { label: "否", value: "0" },
       ],
     },
   ];
@@ -73,6 +77,16 @@ export default function AccountPage() {
     onDelete: handleDelete,
   });
 
+  // 客户端表格（数据已全部加载）
+  const table = useReactTable({
+    data: accounts,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+  });
+
   if (isLoading) {
     return (
       <div className="flex h-full w-full items-center justify-center p-8">
@@ -84,8 +98,10 @@ export default function AccountPage() {
   if (isError) {
     return (
       <div className="flex h-full flex-col items-center justify-center p-8 text-destructive">
-        <p>Error loading accounts</p>
-        <p className="text-sm text-muted-foreground">{error?.message || "Unknown error"}</p>
+        <p>加载账号列表失败</p>
+        <p className="text-sm text-muted-foreground">
+          {error?.message || "未知错误"}
+        </p>
       </div>
     );
   }
@@ -104,17 +120,21 @@ export default function AccountPage() {
           添加账号
         </Button>
       </div>
-      <DataTable 
-        data={accounts} 
-        columns={columns} 
-        searchKey="displayName"
-        searchPlaceholder="Filter accounts..."
-        filters={filters}
-      />
-      
-      <AccountDialog 
-        open={isDialogOpen} 
-        onOpenChange={setIsDialogOpen} 
+
+      <div className="space-y-4">
+        <DataTableToolbar
+          table={table}
+          searchKey="displayName"
+          searchPlaceholder="搜索账号..."
+          filters={filters}
+        />
+        <DataTable table={table} />
+        <DataTablePagination table={table} />
+      </div>
+
+      <AccountDialog
+        open={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
         account={editingAccount}
         onSuccess={refresh}
       />

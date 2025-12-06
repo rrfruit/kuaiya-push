@@ -34,6 +34,7 @@ function useRequest<TData, TParams extends any[]>(
   const serviceRef = useRef(service);
 
   const executeAsync = useCallback(async (...args: TParams): Promise<TData> => {
+    debugger
     paramsRef.current = args;
 
     setIsLoading(true);
