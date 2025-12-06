@@ -1,55 +1,127 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>WebSocket Log Viewer</title>
-    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
-  </head>
-  <body>
-    <h1>Logs</h1>
-    <ul id="logs"></ul>
 
-    <script>
-      // 连接到你的 NestJS WebSocket 服务器
-      // 假设你的后端运行在 3000 端口
-      const socket = io("http://localhost:3000");
+<head>
+  <meta charset="UTF-8" />
+  <title>WebSocket Log Viewer</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
 
-      socket.on("connect", () => {
-        console.log("Connected to WebSocket server!");
-        const li = document.createElement("li");
-        li.textContent = "Successfully connected to the log server.";
-        li.style.color = "green";
-        document.getElementById("logs").appendChild(li);
-      });
+    #logs {
+      list-style: none;
+      padding: 0;
+    }
 
-      // 监听 'log' 事件
-      socket.on("log", (log) => {
-        console.log("Received log:", log);
-        const li = document.createElement("li");
+    #logs li {
+      padding: 8px 12px;
+      margin: 4px 0;
+      border-radius: 4px;
+      background: #f5f5f5;
+      font-family: monospace;
+      font-size: 13px;
+    }
 
-        // 格式化日志输出
-        const logObject = typeof log === "string" ? JSON.parse(log) : log;
-        const { timestamp, level, message, context, ...rest } = logObject;
+    .status {
+      font-weight: bold;
+    }
 
-        li.textContent = `[${new Date(timestamp).toLocaleString()}] [${level.toUpperCase()}] [${context}]: ${message}`;
+    .connected {
+      color: green;
+    }
 
-        // 根据日志级别设置颜色
-        if (level === "error") {
-          li.style.color = "red";
-        } else if (level === "warn") {
-          li.style.color = "orange";
+    .disconnected {
+      color: red;
+    }
+
+    .error {
+      color: red;
+      background: #fff0f0;
+    }
+
+    .warn {
+      color: orange;
+      background: #fff8e0;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Logs</h1>
+  <p id="status" class="status">状态: 连接中...</p>
+  <ul id="logs"></ul>
+
+  <script>
+    const logsEl = document.getElementById("logs");
+    const statusEl = document.getElementById("status");
+
+    // 连接到 WebSocket 服务器
+    const ws = new WebSocket("ws://localhost:3000");
+
+    ws.addEventListener("open", () => {
+      console.log("Connected to WebSocket server!");
+      statusEl.textContent = "状态: 已连接";
+      statusEl.className = "status connected";
+
+      const li = document.createElement("li");
+      li.textContent = "Successfully connected to the log server.";
+      li.className = "connected";
+      logsEl.appendChild(li);
+    });
+
+    ws.addEventListener("message", (event) => {
+      try {
+        const message = JSON.parse(event.data);
+        console.log("Received message:", message);
+
+        // 处理 'log' 事件
+        if (message.event === "log") {
+          const log = message.data;
+          const li = document.createElement("li");
+
+          // 格式化日志输出
+          const logObject = typeof log === "string" ? JSON.parse(log) : log;
+          const { timestamp, level, message: msg, context } = logObject;
+
+          li.textContent = `[${new Date(timestamp).toLocaleString()}] [${level.toUpperCase()}] [${context}]: ${msg}`;
+
+          // 根据日志级别设置样式
+          if (level === "error") {
+            li.className = "error";
+          } else if (level === "warn") {
+            li.className = "warn";
+          }
+
+          logsEl.appendChild(li);
         }
+      } catch (error) {
+        console.error("Failed to parse message:", error);
+      }
+    });
 
-        document.getElementById("logs").appendChild(li);
-      });
+    ws.addEventListener("close", () => {
+      console.log("Disconnected from WebSocket server!");
+      statusEl.textContent = "状态: 已断开";
+      statusEl.className = "status disconnected";
 
-      socket.on("disconnect", () => {
-        console.log("Disconnected from WebSocket server!");
-        const li = document.createElement("li");
-        li.textContent = "Disconnected from the log server.";
-        li.style.color = "red";
-        document.getElementById("logs").appendChild(li);
-      });
-    </script>
-  </body>
+      const li = document.createElement("li");
+      li.textContent = "Disconnected from the log server.";
+      li.className = "disconnected";
+      logsEl.appendChild(li);
+    });
+
+    ws.addEventListener("error", (error) => {
+      console.error("WebSocket error:", error);
+      const li = document.createElement("li");
+      li.textContent = "WebSocket connection error.";
+      li.className = "error";
+      logsEl.appendChild(li);
+    });
+  </script>
+</body>
+
 </html>

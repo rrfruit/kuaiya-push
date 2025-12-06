@@ -10,6 +10,7 @@ import { NestFactory, Reflector } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { LoggingInterceptor } from "./common/interceptors/logging.interceptor";
 import { winstonConfig } from "./winston/winston.config";
+import { SocketGateway } from "./modules/socket/socket.gateway";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -38,6 +39,11 @@ async function bootstrap() {
       },
     }),
   );
+
+  // 获取底层 HTTP 服务器并初始化 WebSocket
+  const server = app.getHttpServer();
+  const socketGateway = app.get(SocketGateway);
+  socketGateway.init(server);
 
   await app.listen(3000);
 }

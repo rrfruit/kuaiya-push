@@ -19,10 +19,8 @@
     "@nestjs/core": "^11.0.1",
     "@nestjs/mapped-types": "^2.1.0",
     "@nestjs/platform-express": "^11.0.1",
-    "@nestjs/platform-socket.io": "^11.1.7",
     "@nestjs/schedule": "^6.0.1",
     "@nestjs/serve-static": "^5.0.4",
-    "@nestjs/websockets": "^11.1.7",
     "@repo/db": "workspace:*",
     "@repo/shared": "workspace:*",
     "class-transformer": "^0.5.1",
@@ -33,11 +31,11 @@
     "puppeteer-extra-plugin-stealth": "^2.11.2",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
-    "socket.io": "^4.8.1",
     "uuid": "^13.0.0",
     "winston": "^3.18.3",
     "winston-daily-rotate-file": "^5.0.0",
-    "winston-transport": "^4.9.0"
+    "winston-transport": "^4.9.0",
+    "ws": "^8.18.3"
   },
   "devDependencies": {
     "@eslint/js": "catalog:",
@@ -51,6 +49,7 @@
     "@types/multer": "^2.0.0",
     "@types/node": "catalog:",
     "@types/uuid": "^11.0.0",
+    "@types/ws": "^8.18.1",
     "eslint": "catalog:",
     "globals": "^16.0.0",
     "source-map-support": "^0.5.21",
