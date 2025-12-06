@@ -6,6 +6,7 @@ import "./index.css";
 import { Toaster } from "sonner";
 
 import { router } from "./router/router";
+import { LogViewer } from "./components/log-viewer";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -21,6 +22,7 @@ createRoot(document.getElementById("root")!).render(
     <QueryClientProvider client={queryClient}>
       <Toaster position="top-center" richColors />
       <RouterProvider router={router} />
+      <LogViewer />
     </QueryClientProvider>
   </StrictMode>,
 );
