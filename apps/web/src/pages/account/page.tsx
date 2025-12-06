@@ -8,16 +8,16 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { getAccounts, deleteAccount } from "@/api/account";
-import { getColumns } from "./columns";
+import { getColumns } from "./components/columns";
 import { AccountWithRelations } from "@/types";
 import {
   DataTable,
   DataTablePagination,
   DataTableToolbar,
 } from "@/components/data-table";
-import { Loader2, PlusIcon } from "lucide-react";
+import { PlusIcon } from "lucide-react";
 import { Button } from "@repo/ui/components/ui/button";
-import { AccountDialog } from "./account-dialog";
+import { AccountDialog } from "./components/account-dialog";
 import { ConfirmDialog } from "@/components/confirm-dialog";
 import { toast } from "sonner";
 
@@ -95,25 +95,6 @@ export default function AccountPage() {
     getSortedRowModel: getSortedRowModel(),
   });
 
-  if (isLoading) {
-    return (
-      <div className="flex h-full w-full items-center justify-center p-8">
-        <Loader2 className="h-6 w-6 animate-spin" />
-      </div>
-    );
-  }
-
-  if (isError) {
-    return (
-      <div className="flex h-full flex-col items-center justify-center p-8 text-destructive">
-        <p>加载账号列表失败</p>
-        <p className="text-sm text-muted-foreground">
-          {error instanceof Error ? error.message : "未知错误"}
-        </p>
-      </div>
-    );
-  }
-
   return (
     <div className="hidden h-full flex-1 flex-col space-y-4 p-8 md:flex">
       <div className="flex items-center justify-between space-y-2">
@@ -136,7 +117,12 @@ export default function AccountPage() {
           searchPlaceholder="搜索账号..."
           filters={filters}
         />
-        <DataTable table={table} />
+        <DataTable
+          table={table}
+          isLoading={isLoading}
+          isError={isError}
+          errorMessage={error instanceof Error ? error.message : undefined}
+        />
         <DataTablePagination table={table} />
       </div>
 
