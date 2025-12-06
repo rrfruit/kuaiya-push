@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
+import { AxiosError } from 'axios';
 
 export type Service<TData, TParams extends any[]> = (...args: TParams) => Promise<TData>;
 
@@ -7,8 +8,8 @@ export interface Options<TData, TParams extends any[]> {
   defaultParams?: TParams;
   onBefore?: (params: TParams) => void;
   onSuccess?: (data: TData, params: TParams) => void;
-  onError?: (e: Error, params: TParams) => void;
-  onFinally?: (params: TParams, data?: TData, e?: Error) => void;
+  onError?: (e: AxiosError, params: TParams) => void;
+  onFinally?: (params: TParams, data?: TData, e?: AxiosError) => void;
 }
 
 function useRequest<TData, TParams extends any[]>(
@@ -25,7 +26,7 @@ function useRequest<TData, TParams extends any[]>(
   } = options;
 
   const [data, setData] = useState<TData | undefined>();
-  const [error, setError] = useState<Error | undefined>();
+  const [error, setError] = useState<AxiosError | undefined>();
   const [isLoading, setIsLoading] = useState<boolean>(!manual);
   const [isError, setIsError] = useState<boolean>(false);
 
@@ -75,13 +76,14 @@ function useRequest<TData, TParams extends any[]>(
       paramsRef.current = defaultParams;
     }
     return execute(...paramsRef.current);
-  }, [execute]);
+  }, [execute, defaultParams]);
 
   useEffect(() => {
     if (!manual) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       execute(...defaultParams);
     }
-  }, [manual, execute, ...defaultParams]);
+  }, [manual, execute, defaultParams]);
 
   return {
     data,

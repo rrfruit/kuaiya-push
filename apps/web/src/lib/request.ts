@@ -26,24 +26,14 @@ instance.interceptors.request.use(
   },
 );
 
-const publicUrls = ["/auth/profile"];
-
 instance.interceptors.response.use(
   async (response) => {
-    if (response.data?.code !== 0) {
-      if (response.data.code === 4100) {
-        if (!publicUrls.includes(response.config.url!)) {
-          // gotoLogin()
-        }
-        return response;
-      } else {
-        toast.error(response.data.message);
-      }
-    }
     return response;
   },
-  (error: AxiosError) => {
-    toast.error((error.response?.data as any)?.message || "未知错误");
+  (error: AxiosError) => {  
+    toast.error(error.message, {
+      description: (error.response?.data as any)?.message
+    });
     return Promise.reject(error);
   },
 );
