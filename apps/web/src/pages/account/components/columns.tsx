@@ -11,16 +11,51 @@ import {
   DropdownMenuTrigger,
 } from "@repo/ui/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
+import { useAccounts } from "./accounts-provider";
 
-interface GetColumnsProps {
-  onEdit: (account: AccountWithRelations) => void;
-  onDelete: (account: AccountWithRelations) => void;
+function DataTableRowActions({ row }: { row: { original: AccountWithRelations } }) {
+  const { setOpen, setCurrentRow } = useAccounts();
+  const account = row.original;
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className="h-8 w-8 p-0">
+          <span className="sr-only">Open menu</span>
+          <MoreHorizontal className="h-4 w-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+        <DropdownMenuItem
+          onClick={() => navigator.clipboard.writeText(account.id)}
+        >
+          Copy Account ID
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem
+          onClick={() => {
+            setCurrentRow(account);
+            setOpen("update");
+          }}
+        >
+          Edit Account
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          className="text-destructive"
+          onClick={() => {
+            setCurrentRow(account);
+            setOpen("delete");
+          }}
+        >
+          Delete Account
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
 }
 
-export const getColumns = ({
-  onEdit,
-  onDelete,
-}: GetColumnsProps): ColumnDef<AccountWithRelations>[] => [
+export const columns: ColumnDef<AccountWithRelations>[] = [
   {
     accessorKey: "displayName",
     header: ({ column }) => (
@@ -71,37 +106,6 @@ export const getColumns = ({
   },
   {
     id: "actions",
-    cell: ({ row }) => {
-      const account = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(account.id)}
-            >
-              Copy Account ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => onEdit(account)}>
-              Edit Account
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              className="text-destructive"
-              onClick={() => onDelete(account)}
-            >
-              Delete Account
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
+    cell: ({ row }) => <DataTableRowActions row={row} />,
   },
 ];

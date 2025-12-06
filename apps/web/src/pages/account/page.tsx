@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   getCoreRowModel,
@@ -8,8 +7,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { getAccounts, deleteAccount } from "@/api/account";
-import { getColumns } from "./components/columns";
-import { AccountWithRelations } from "@/types";
+import { columns } from "./components/columns";
 import {
   DataTable,
   DataTablePagination,
@@ -20,14 +18,11 @@ import { Button } from "@repo/ui/components/ui/button";
 import { AccountDialog } from "./components/account-dialog";
 import { ConfirmDialog } from "@/components/confirm-dialog";
 import { toast } from "sonner";
+import { AccountsProvider, useAccounts } from "./components/accounts-provider";
 
-export default function AccountPage() {
+function AccountContent() {
   const queryClient = useQueryClient();
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [editingAccount, setEditingAccount] =
-    useState<AccountWithRelations | null>(null);
-  const [deleteAccountData, setDeleteAccountData] =
-    useState<AccountWithRelations | null>(null);
+  const { open, setOpen, currentRow, setCurrentRow } = useAccounts();
 
   // 获取账号列表
   const {
@@ -46,7 +41,8 @@ export default function AccountPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["accounts"] });
       toast.success("账号已删除");
-      setDeleteAccountData(null);
+      setOpen(null);
+      setCurrentRow(null);
     },
     onError: (err) => {
       toast.error(
@@ -65,25 +61,6 @@ export default function AccountPage() {
       ],
     },
   ];
-
-  const handleCreate = () => {
-    setEditingAccount(null);
-    setIsDialogOpen(true);
-  };
-
-  const handleEdit = (account: AccountWithRelations) => {
-    setEditingAccount(account);
-    setIsDialogOpen(true);
-  };
-
-  const handleDelete = (account: AccountWithRelations) => {
-    setDeleteAccountData(account);
-  };
-
-  const columns = getColumns({
-    onEdit: handleEdit,
-    onDelete: handleDelete,
-  });
 
   // 客户端表格
   const table = useReactTable({
@@ -104,7 +81,7 @@ export default function AccountPage() {
             管理你的社交媒体账号及其状态。
           </p>
         </div>
-        <Button size="sm" onClick={handleCreate}>
+        <Button size="sm" onClick={() => setOpen("create")}>
           <PlusIcon className="h-4 w-4" />
           添加账号
         </Button>
@@ -127,23 +104,39 @@ export default function AccountPage() {
       </div>
 
       <AccountDialog
-        open={isDialogOpen}
-        onOpenChange={setIsDialogOpen}
-        account={editingAccount}
+        open={open === "create" || open === "update"}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) {
+            setOpen(null);
+            setCurrentRow(null);
+          }
+        }}
+        account={open === "update" ? currentRow : null}
       />
 
       <ConfirmDialog
-        open={!!deleteAccountData}
-        onOpenChange={(open) => !open && setDeleteAccountData(null)}
+        open={open === "delete"}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) {
+            setOpen(null);
+            setCurrentRow(null);
+          }
+        }}
         title="确认删除账号?"
-        desc={`您确定要删除账号 "${deleteAccountData?.displayName}" 吗？此操作无法撤销。`}
+        desc={`您确定要删除账号 "${currentRow?.displayName}" 吗？此操作无法撤销。`}
         confirmText="删除"
         destructive
-        handleConfirm={() =>
-          deleteAccountData && deleteMutation.mutate(deleteAccountData.id)
-        }
+        handleConfirm={() => currentRow && deleteMutation.mutate(currentRow.id)}
         isLoading={deleteMutation.isPending}
       />
     </div>
+  );
+}
+
+export default function AccountPage() {
+  return (
+    <AccountsProvider>
+      <AccountContent />
+    </AccountsProvider>
   );
 }
