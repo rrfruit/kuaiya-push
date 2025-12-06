@@ -8,7 +8,7 @@ import {
 } from "@repo/ui/components/ui/card";
 import { cn } from "@/lib/utils";
 import { ScrollTextIcon, XIcon, Trash2Icon, GripIcon } from "lucide-react";
-import { useWebSocket } from "@/hooks/use-websocket";
+import { useWebSocketEvent, useWebSocketStatus } from "@/hooks/use-websocket";
 import { ResizablePanel, calculateDefaultPosition } from "./resizable-panel";
 
 interface LogEntry {
@@ -34,8 +34,6 @@ const MIN_HEIGHT = 200;
 
 export function LogViewer() {
   const [isOpen, setIsOpen] = useState(false);
-  const [logs, setLogs] = useState<LogEntry[]>([]);
-  const logsEndRef = useRef<HTMLDivElement>(null);
 
   // 计算默认位置：在按钮左边，底部对齐
   const defaultState = useMemo(() => {
@@ -51,60 +49,9 @@ export function LogViewer() {
     return { x, y, width: DEFAULT_WIDTH, height: DEFAULT_HEIGHT };
   }, []);
 
-  // 处理日志消息
-  const handleLogMessage = useCallback((data: LogData) => {
-    const newLog: LogEntry = {
-      id: `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
-      timestamp: data.timestamp || new Date().toISOString(),
-      level: data.level || "info",
-      message: data.message || JSON.stringify(data),
-      context: data.context,
-    };
-    setLogs((prev) => [...prev.slice(-499), newLog]);
-  }, []);
-
-  // 使用全局 WebSocket 监听 log 事件
-  const { status } = useWebSocket<LogData>(
-    isOpen ? "log" : "",
-    handleLogMessage
-  );
-
+  const status = useWebSocketStatus();
   const isConnected = status === "connected";
 
-  // 自动滚动到底部
-  useEffect(() => {
-    logsEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [logs]);
-
-  const clearLogs = () => {
-    setLogs([]);
-  };
-
-  const getLevelColor = (level: string) => {
-    switch (level.toLowerCase()) {
-      case "error":
-        return "text-red-500";
-      case "warn":
-      case "warning":
-        return "text-amber-500";
-      case "debug":
-        return "text-blue-400";
-      default:
-        return "text-emerald-400";
-    }
-  };
-
-  const formatTime = (timestamp: string) => {
-    try {
-      return new Date(timestamp).toLocaleTimeString("zh-CN", {
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-      });
-    } catch {
-      return timestamp;
-    }
-  };
 
   return (
     <>
@@ -131,7 +78,7 @@ export function LogViewer() {
         className="shadow-2xl"
       >
         {({ onMouseDown, isDragging }) => (
-          <Card className="flex flex-col py-0 gap-2 h-full border-0 bg-zinc-900/95 backdrop-blur-sm text-zinc-100 rounded-xl overflow-hidden">
+          <Card className="flex flex-col pt-0 pb-2 gap-2 h-full border-0 bg-zinc-900/95 backdrop-blur-sm text-zinc-100 rounded-xl overflow-hidden">
             {/* 头部 - 可拖动区域 */}
             <CardHeader
               className={cn(
@@ -168,14 +115,6 @@ export function LogViewer() {
                   <Button
                     variant="ghost"
                     size="icon-sm"
-                    onClick={clearLogs}
-                    className="text-zinc-400 hover:text-zinc-200 hover:bg-zinc-700/50"
-                  >
-                    <Trash2Icon className="size-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon-sm"
                     onClick={() => setIsOpen(false)}
                     className="text-zinc-400 hover:text-zinc-200 hover:bg-zinc-700/50"
                   >
@@ -187,49 +126,108 @@ export function LogViewer() {
 
             {/* 日志内容区域 */}
             <CardContent className="p-0 overflow-hidden flex-1 min-h-0">
-              <div className="overflow-y-auto font-mono text-xs leading-relaxed h-full">
-                {logs.length === 0 ? (
-                  <div className="flex items-center justify-center h-full text-zinc-500">
-                    暂无日志
-                  </div>
-                ) : (
-                  <div className="divide-y divide-zinc-800/50">
-                    {logs.map((log) => (
-                      <div
-                        key={log.id}
-                        className="px-4 py-2 hover:bg-zinc-800/30 transition-colors"
-                      >
-                        <div className="flex items-start gap-2">
-                          <span className="text-zinc-500 shrink-0">
-                            {formatTime(log.timestamp)}
-                          </span>
-                          <span
-                            className={cn(
-                              "font-semibold uppercase shrink-0 w-12",
-                              getLevelColor(log.level)
-                            )}
-                          >
-                            {log.level}
-                          </span>
-                          {log.context && (
-                            <span className="text-violet-400 shrink-0">
-                              [{log.context}]
-                            </span>
-                          )}
-                          <span className="text-zinc-300 break-all">
-                            {log.message}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-                    <div ref={logsEndRef} />
-                  </div>
-                )}
-              </div>
+              <LogContent />
             </CardContent>
           </Card>
         )}
       </ResizablePanel>
     </>
+  );
+}
+
+const getLevelColor = (level: string) => {
+  switch (level.toLowerCase()) {
+    case "error":
+      return "text-red-500";
+    case "warn":
+    case "warning":
+      return "text-amber-500";
+    case "debug":
+      return "text-blue-400";
+    default:
+      return "text-emerald-400";
+  }
+};
+
+const formatTime = (timestamp: string) => {
+  try {
+    return new Date(timestamp).toLocaleTimeString("zh-CN", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    });
+  } catch {
+    return timestamp;
+  }
+};
+
+
+function LogContent() {
+  const [logs, setLogs] = useState<LogEntry[]>([]);
+  const logsEndRef = useRef<HTMLDivElement>(null);
+
+  // 处理日志消息
+  const handleLogMessage = useCallback((data: LogData) => {
+    const newLog: LogEntry = {
+      id: `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
+      timestamp: data.timestamp || new Date().toISOString(),
+      level: data.level || "info",
+      message: data.message || JSON.stringify(data),
+      context: data.context,
+    };
+    setLogs((prev) => [...prev.slice(-499), newLog]);
+  }, []);
+
+  // 使用全局 WebSocket 监听 log 事件
+  useWebSocketEvent<LogData>("log", handleLogMessage);
+
+  // 自动滚动到底部
+  useEffect(() => {
+    logsEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [logs]);
+
+  return <div className="overflow-y-auto font-mono text-xs leading-relaxed h-full">
+    {logs.length === 0 ? (
+      <div className="flex items-center justify-center h-full text-zinc-500">
+        暂无日志
+      </div>
+    ) : (
+      <div className="divide-y divide-zinc-800/50">
+        {logs.map((log) => (
+          <LogItem key={log.id} log={log} />
+        ))}
+        <div ref={logsEndRef} />
+      </div>
+    )}
+  </div>
+}
+
+function LogItem({ log }: { log: LogEntry }) {
+  return (
+    <div
+      className="px-4 py-0.5 hover:bg-zinc-800/30 transition-colors"
+    >
+      <div className="flex items-start gap-2">
+        <span className="text-zinc-500 shrink-0">
+          {formatTime(log.timestamp)}
+        </span>
+        <span
+          className={cn(
+            "font-semibold uppercase shrink-0 w-12",
+            getLevelColor(log.level)
+          )}
+        >
+          {log.level}
+        </span>
+        {log.context && (
+          <span className="text-violet-400 shrink-0">
+            [{log.context}]
+          </span>
+        )}
+        <span className="text-zinc-300 break-all">
+          {log.message}
+        </span>
+      </div>
+    </div>
   );
 }
