@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@repo/ui/components/ui/dropdown-menu";
 import { MoreHorizontal, Image, Video, Eye, Trash2, Copy } from "lucide-react";
+import { Checkbox } from "@repo/ui/components/ui/checkbox";
 
 interface GetColumnsProps {
   onPreview: (file: UploadFile) => void;
@@ -31,6 +32,30 @@ export const getColumns = ({
   onPreview,
   onDelete,
 }: GetColumnsProps): ColumnDef<UploadFile>[] => [
+  {
+    id: 'select',
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && 'indeterminate')
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label='Select all'
+        className='translate-y-0.5'
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label='Select row'
+        className='translate-y-0.5'
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
   {
     accessorKey: "filename",
     header: ({ column }) => (

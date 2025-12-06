@@ -23,6 +23,10 @@ import { PreviewDialog } from "./preview-dialog";
 import { ConfirmDialog } from "@/components/confirm-dialog";
 import { toast } from "sonner";
 
+import { DataTableBulkActions } from "./bulk-actions";
+
+const QUERY_KEY = "uploadFiles";
+
 export default function UploadPage() {
   const queryClient = useQueryClient();
   const [isUploadOpen, setIsUploadOpen] = useState(false);
@@ -31,7 +35,7 @@ export default function UploadPage() {
 
   // 获取数据
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["uploadFiles"],
+    queryKey: [QUERY_KEY],
     queryFn: getUploadFiles,
   });
 
@@ -39,7 +43,7 @@ export default function UploadPage() {
   const deleteMutation = useMutation({
     mutationFn: deleteUploadFile,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["uploadFiles"] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY] });
       toast.success("文件已删除");
       setDeleteFileData(null);
     },
@@ -104,6 +108,7 @@ export default function UploadPage() {
           errorMessage={error instanceof Error ? error.message : undefined}
         />
         <DataTablePagination table={table} />
+        <DataTableBulkActions table={table} />
       </div>
 
       <UploadDialog open={isUploadOpen} onOpenChange={setIsUploadOpen} />
